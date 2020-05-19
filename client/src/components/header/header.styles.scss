@@ -1,0 +1,21 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-weight: 800;
+
+  padding: 1rem;
+  margin-bottom: 5rem;
+}
+
+.right-half {
+  display: flex;
+  div {
+    margin-right: 10px;
+  }
+}
+
+.login-box {
+  display: flex;
+  flex-direction: column;
+}

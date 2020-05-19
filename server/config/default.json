@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://poke2:Pokemon@2@cluster0-g7idw.gcp.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "qurram_big_dong"
+}

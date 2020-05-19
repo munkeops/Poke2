@@ -1,0 +1,81 @@
+.homepage-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.play-half {
+  display: flex;
+  flex-direction: column;
+}
+
+.selection-half {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-card {
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.selector {
+  background-color: rgba(92, 92, 92, 0.5);
+  border-radius: 5px;
+  z-index: 2;
+}
+
+.prev-poke {
+  color: white;
+  padding: 3px;
+}
+
+.team-prev {
+  background: radial-gradient(circle at 20% 20%, #f7f7f7 25%, #d4d4d4 100%);
+  display: flex;
+}
+
+.team-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-btn {
+  padding: 1rem;
+  background: radial-gradient(circle at 20% 20%, #294a33 25%, #16331f 100%);
+  border-radius: 5px;
+  color: white;
+  margin: 1rem;
+  text-align: center;
+}
+
+.selection-container {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+}
+
+.poke-row {
+  display: flex;
+}
+
+.single-stat {
+  margin: 5px;
+}
+
+.creation-prev {
+  display: flex;
+  margin: 1rem;
+}
+
+.cp-poke {
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}

@@ -1,10 +1,12 @@
 import React from "react";
 import { Provider } from "react-redux";
 import store from "./store";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import "./App.scss";
 
 import Homepage from "./pages/homepage/homepage";
+import Battle from "./pages/battle/battle";
 
 import { loadUser } from "./actions/authActions";
 
@@ -16,7 +18,16 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <div className="main-container">
-          <Homepage />
+          <Router>
+            <Switch>
+              <Route path="/battle">
+                <Battle />
+              </Route>
+              <Route path="/">
+                <Homepage />
+              </Route>
+            </Switch>
+          </Router>
         </div>
       </Provider>
     );

@@ -1,7 +1,12 @@
 import React from "react";
 
+import { Link } from "react-router-dom";
 import "./homepage.styles.scss";
 import { Layout } from "../layout";
+import socketIO from "socket.io-client";
+import { connect } from "react-redux";
+import { setRoom } from "../../actions/authActions";
+import { Redirect } from "react-router";
 
 import StartCard from "../../components/start-card/startCard";
 
@@ -32,6 +37,7 @@ class Homepage extends React.Component {
       activeTeam: 0,
       pokeData: [],
       newTeam: [],
+      redirect: false,
     };
   }
 
@@ -57,6 +63,7 @@ class Homepage extends React.Component {
           );
           this.setState({ pokeData: sortedData });
         });
+      return 1;
     });
   }
   showTeams = () => this.setState({ showTeams: !this.state.showTeams });
@@ -79,11 +86,43 @@ class Homepage extends React.Component {
       newTeam: [],
     });
   };
+  findGame = () => {
+    if (!this.props.isAuthenticated) {
+      return alert("You must be logged in to play a game");
+    }
+
+    const socket = socketIO("http://localhost:5000");
+    socket.emit(
+      "join",
+      {
+        username: this.props.user.username,
+        team: this.state.teamList[this.state.activeTeam],
+      },
+      (room) => {
+        console.log(room);
+        this.props.setRoom({ room });
+        socket.emit("play-turn", {
+          username: this.props.username,
+          room,
+          gameStart: true,
+        });
+
+        console.log(this.props);
+      }
+    );
+
+    socket.on("starting-game", ({ team }) => {
+      console.log(team);
+      this.setState({ redirect: true });
+    });
+  };
 
   render() {
     const idArray = [...Array(100).keys()].map((x) => x + 1);
     const sixRange = [...Array(6).keys()];
-
+    if (this.state.redirect) {
+      return <Redirect to="/battle"></Redirect>;
+    }
     return (
       <Layout>
         <div className="homepage-container">
@@ -95,7 +134,11 @@ class Homepage extends React.Component {
               teamList={this.state.teamList}
               activeTeam={this.state.activeTeam}
             />
+            <div className="start-btn" onClick={this.findGame}>
+              Find game
+            </div>
           </div>
+          <Link to="/battle">GO TO BATTLE</Link>
           <div className="selection-half">
             <div className="selection-container">
               <div className="cur-team"></div>
@@ -145,6 +188,7 @@ class Homepage extends React.Component {
                         </div>
                       );
                     }
+                    return 1;
                   })
                 )}
               </div>
@@ -156,4 +200,10 @@ class Homepage extends React.Component {
   }
 }
 
-export default Homepage;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.error,
+  user: state.auth.user,
+  room: state.auth.room,
+});
+export default connect(mapStateToProps, { setRoom })(Homepage);

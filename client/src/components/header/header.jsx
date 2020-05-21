@@ -46,7 +46,7 @@ class Header extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { error, isAuthenticated } = this.props;
-    if (error != prevProps.error) {
+    if (error !== prevProps.error) {
       if (error.id === "REGISTER_FAIL") {
         this.setState({ msg: error.msg.msg });
       } else if (error.id === "LOGIN_FAIL") {

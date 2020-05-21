@@ -7,6 +7,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  SET_ROOM,
 } from "../actions/types";
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
   isAuthenticated: null,
   isLoading: false,
   user: null,
+  room: null,
 };
 
 export default function (state = initialState, action) {
@@ -50,6 +52,12 @@ export default function (state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false,
+      };
+    case SET_ROOM:
+      console.log("SETTING ROOM", action.payload);
+      return {
+        ...state,
+        room: action.payload,
       };
     default:
       return state;

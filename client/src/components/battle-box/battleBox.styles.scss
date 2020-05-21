@@ -1,0 +1,11 @@
+.battle-box {
+  background-color: white;
+  color: black;
+  display: flex;
+  flex-direction: column;
+}
+
+.battle {
+  background-image: url("../../assets/battle-bg.jpg");
+  padding: 200px;
+}

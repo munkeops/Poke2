@@ -38,7 +38,6 @@ const StartCard = (props) => {
           )}
         </div>
       </div>
-      <div className="start-btn">Find game</div>
     </div>
   );
 };

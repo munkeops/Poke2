@@ -9,6 +9,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  SET_ROOM,
 } from "../actions/types";
 
 //Check token and load user
@@ -90,4 +91,8 @@ export const login = ({ username, password }) => (dispatch) => {
       );
       dispatch({ type: LOGIN_FAIL });
     });
+};
+
+export const setRoom = ({ room }) => (dispatch) => {
+  dispatch({ type: SET_ROOM, payload: room });
 };

@@ -98,6 +98,6 @@ export const setRoom = ({ room }) => (dispatch) => {
   dispatch({ type: SET_ROOM, payload: room });
 };
 
-export const setTeam = ({ team, enemy }) => (dispatch) => {
-  dispatch({ type: SET_TEAM, payload: { team, enemy } });
+export const setTeam = ({ team, enemy, origTeam }) => (dispatch) => {
+  dispatch({ type: SET_TEAM, payload: { team, enemy, origTeam } });
 };

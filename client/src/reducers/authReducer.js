@@ -67,6 +67,7 @@ export default function (state = initialState, action) {
         ...state,
         team: action.payload.team,
         enemy: action.payload.enemy,
+        origTeam: action.payload.origTeam,
       };
     default:
       return state;

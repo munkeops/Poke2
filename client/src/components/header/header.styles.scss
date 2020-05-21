@@ -5,17 +5,55 @@
   font-weight: 800;
 
   padding: 1rem;
-  margin-bottom: 5rem;
+  padding-bottom: 0;
+  margin-bottom: 0.4rem;
 }
 
 .right-half {
   display: flex;
   div {
-    margin-right: 10px;
+    margin: auto;
+
+    margin-left: 40px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000,
+      1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+      1px 1px 5px #000;
+  }
+
+  div:hover {
+    border-bottom: 3px solid #b71c1c;
   }
 }
 
 .login-box {
   display: flex;
+  z-index: 999;
   flex-direction: column;
+  margin-right: 1rem;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.3);
+
+  div {
+    margin-top: 0.5rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    button {
+      margin: 0.1rem;
+    }
+  }
+  border-radius: 12px;
+}
+
+.brand {
+  font-size: 2rem;
+  color: #ff5252;
+  span {
+    font-size: 3rem;
+  }
+  text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000,
+    1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 5px #000;
+  cursor: pointer;
 }

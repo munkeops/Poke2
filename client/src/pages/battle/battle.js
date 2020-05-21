@@ -16,7 +16,11 @@ class Battle extends React.Component {
       <Layout>
         <h2>Room #{this.props.room}</h2>
         <div className="container">
-          <BattleBox team={this.props.team} enemy={this.props.enemy} />
+          <BattleBox
+            team={this.props.team}
+            enemy={this.props.enemy}
+            origTeam={this.props.origTeam}
+          />
           <Logs />
         </div>
       </Layout>
@@ -31,5 +35,6 @@ const mapStateToProps = (state) => ({
   room: state.auth.room,
   team: state.auth.team,
   enemy: state.auth.enemy,
+  origTeam: state.auth.origTeam,
 });
 export default connect(mapStateToProps)(Battle);

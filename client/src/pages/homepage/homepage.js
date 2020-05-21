@@ -26,6 +26,14 @@ class Homepage extends React.Component {
               { name: "shadow ball", power: "90", type: "special", acc: 100 },
               { name: "psyshock", power: "90", type: "special", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "terrakion",
@@ -40,6 +48,14 @@ class Homepage extends React.Component {
               { name: "earthquake", power: "100", type: "physical", acc: 100 },
               { name: "quick attack", power: "40", type: "physical", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "garchomp",
@@ -54,6 +70,14 @@ class Homepage extends React.Component {
               { name: "earthquake", power: "100", type: "physical", acc: 100 },
               { name: "dragon claw", power: "80", type: "physical", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "serperior",
@@ -63,6 +87,14 @@ class Homepage extends React.Component {
               { name: "hp fire", power: "90", type: "special", acc: 100 },
               { name: "dragon pulse", power: "90", type: "special", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "starmie",
@@ -72,6 +104,14 @@ class Homepage extends React.Component {
               { name: "shadow ball", power: "90", type: "special", acc: 100 },
               { name: "psyshock", power: "90", type: "special", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "talonflame",
@@ -81,6 +121,14 @@ class Homepage extends React.Component {
               { name: "steel wing", power: "80", type: "physical", acc: 100 },
               { name: "roost", power: "-", type: "n/a", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
         ],
 
@@ -93,6 +141,14 @@ class Homepage extends React.Component {
               { name: "shadow ball", power: "90", type: "special", acc: 100 },
               { name: "psyshock", power: "90", type: "special", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "infernape",
@@ -102,6 +158,14 @@ class Homepage extends React.Component {
               { name: "mach punch", power: "40", type: "physical", acc: 100 },
               { name: "fire blase", power: "110", type: "physical", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "haxorus",
@@ -111,6 +175,14 @@ class Homepage extends React.Component {
               { name: "dragon claw", power: "90", type: "physical", acc: 100 },
               { name: "dragon dance", power: "-", type: "n/a", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "bisharp",
@@ -120,6 +192,14 @@ class Homepage extends React.Component {
               { name: "iron head", power: "90", type: "physical", acc: 100 },
               { name: "swords dance", power: "-", type: "n/a", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "hippowdon",
@@ -129,6 +209,14 @@ class Homepage extends React.Component {
               { name: "sandstorm", power: "-", type: "n/a", acc: 100 },
               { name: "slack off", power: "-", type: "n/a", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
           {
             name: "latios",
@@ -138,6 +226,14 @@ class Homepage extends React.Component {
               { name: "shadow ball", power: "90", type: "special", acc: 100 },
               { name: "psyshock", power: "90", type: "special", acc: 100 },
             ],
+            stats: {
+              hp: 400,
+              def: 400,
+              atk: 400,
+              spd: 400,
+              spa: 400,
+              spe: 400,
+            },
           },
         ],
       ],
@@ -219,13 +315,63 @@ class Homepage extends React.Component {
   };
   saveTeam = () => {
     let decided = [];
+    let stats = {};
     for (let [key, value] of Object.entries(this.state.userMoves)) {
       console.log(key, value);
-      decided.push({ name: key, moves: value });
+      fetch(`https://pokeapi.co/api/v2/pokemon/${key}`)
+        .then((data) => data.json())
+        .then((res) => {
+          console.log(res);
+          stats.spe =
+            (Math.floor(
+              (2 * res.stats[0].base_stat + 31 + Math.floor(252 / 4) * 100) /
+                100
+            ) +
+              5) *
+            1.1;
+          stats.spd =
+            (Math.floor(
+              (2 * res.stats[0].base_stat + 31 + Math.floor(252 / 4) * 100) /
+                100
+            ) +
+              5) *
+            1.1;
+          stats.spa =
+            (Math.floor(
+              (2 * res.stats[0].base_stat + 31 + Math.floor(252 / 4) * 100) /
+                100
+            ) +
+              5) *
+            1.1;
+          stats.def =
+            (Math.floor(
+              (2 * res.stats[0].base_stat + 31 + Math.floor(252 / 4) * 100) /
+                100
+            ) +
+              5) *
+            1.1;
+          stats.atk =
+            (Math.floor(
+              (2 * res.stats[0].base_stat + 31 + Math.floor(252 / 4) * 100) /
+                100
+            ) +
+              5) *
+            1.1;
+          stats.hp =
+            Math.floor(
+              (2 * res.stats[0].base_stat + 31 + Math.floor(252 / 4) * 100) /
+                100
+            ) +
+            100 +
+            10;
+          decided.push({ name: key, moves: value, stats: stats });
+        });
     }
     this.setState({
       teamList: this.state.teamList.concat([decided]),
       newTeam: [],
+      viewMoves: false,
+      moveList: [],
     });
   };
   findGame = () => {
@@ -253,9 +399,9 @@ class Homepage extends React.Component {
     socket.on("starting-game", ({ team, enemy, username }) => {
       console.log("USERS: ", username, this.props.user.username);
       if (this.props.user.username !== username) {
-        this.props.setTeam({ team: enemy, enemy: team });
+        this.props.setTeam({ team: enemy, enemy: team, origTeam: enemy });
       } else {
-        this.props.setTeam({ team, enemy });
+        this.props.setTeam({ team, enemy, origTeam: team });
       }
 
       this.setState({ redirect: true });
@@ -396,14 +542,37 @@ class Homepage extends React.Component {
                                 )
                               }
                             >
-                              <div className="single-stat">
-                                #{this.state.pokeData[arrayId].id}{" "}
-                                {this.state.pokeData[arrayId].name}
+                              <div
+                                className="single-stat"
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "row",
+                                  width: "170px",
+                                  justifyContent: "flex-start",
+                                }}
+                              >
+                                <img
+                                  src={`https://img.pokemondb.net/sprites/sword-shield/icon/${this.state.pokeData[arrayId].name}.png`}
+                                  alt={this.state.pokeData[arrayId].name}
+                                ></img>
+                                <div
+                                  style={{
+                                    margin: "auto",
+                                    marginLeft: "5px",
+                                    textTransform: "capitalize",
+                                  }}
+                                >
+                                  {this.state.pokeData[arrayId].name}
+                                </div>
                               </div>
                               {sixRange.map((index) => {
                                 return (
                                   <div
                                     className="single-stat"
+                                    style={{
+                                      margin: "auto",
+                                      marginRight: "20px",
+                                    }}
                                     key={
                                       this.state.pokeData[arrayId].stats[index]
                                         .stat.name

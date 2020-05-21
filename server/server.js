@@ -53,6 +53,7 @@ io.on("connection", (socket) => {
       username,
       status: "pending",
       team: team,
+      origTeam: team,
     };
 
     //Here, basically checking if the dictionary entry for that room already exists, if it doesn't we create a new one and populate it
@@ -90,6 +91,7 @@ io.on("connection", (socket) => {
     if (flag === true) {
       if (gameStart) {
         enemy = entries.filter((entry) => entry.id !== socket.id);
+        console.log(enemy);
         console.log("Enemy team: ", enemy[0].team);
         console.log("USERNAME: ", username);
         io.to(room).emit("starting-game", {

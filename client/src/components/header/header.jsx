@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import LoginCard from "../login-card/loginCard";
 import "./header.styles.scss";
-
+import { GiPokecog } from "react-icons/gi";
 import { register, logout, login } from "../../actions/authActions";
 import { clearErrors } from "../../actions/errorActions";
 
@@ -14,6 +14,7 @@ class Header extends React.Component {
       isLoggedin: false,
       msg: null,
       toggleRegister: false,
+      showPopover: false,
     };
   }
 
@@ -77,26 +78,49 @@ class Header extends React.Component {
 
   render() {
     return (
-      <div className="header">
-        <div>PokeTwo</div>
-        <div className="right-half">
-          <div>Profile</div>
-          {this.props.isAuthenticated ? (
-            <>
-              <div>Hi!{this.props.user.username}</div>
-              <div onClick={this.props.logout}>Logout</div>
-            </>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          paddingBottom: "1rem",
+          marginBottom: "5rem",
+        }}
+      >
+        <div className="header">
+          <div className="brand">
+            <GiPokecog />
+            <span style={{ color: "white" }}>
+              Poke<span style={{ color: "#ff5252" }}>Two</span>
+            </span>
+          </div>
+          <div className="right-half">
+            <div>Profile</div>
+            {this.props.isAuthenticated ? (
+              <>
+                <div>{this.props.user.username}</div>
+                <div onClick={this.props.logout}>Logout</div>
+              </>
+            ) : (
+              <div
+                onClick={() =>
+                  this.setState({ toggleLogin: !this.state.toggleLogin })
+                }
+              >
+                Login
+              </div>
+            )}
+          </div>
+        </div>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          {this.state.isLoggedin ? (
+            <div></div>
           ) : (
-            <div
-              onClick={() =>
-                this.setState({ toggleLogin: !this.state.toggleLogin })
-              }
-            >
-              Login
-            </div>
-          )}
-
-          {this.state.isLoggedin ? null : (
             <LoginCard
               registerStatus={this.state.toggleRegister}
               toggleRegister={this.toggleRegister}

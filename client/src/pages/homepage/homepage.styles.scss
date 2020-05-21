@@ -13,6 +13,8 @@
 .selection-half {
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  max-height: 80vh;
 }
 
 .start-card {
@@ -30,7 +32,6 @@
 }
 
 .prev-poke {
-  color: white;
   padding: 3px;
 }
 
@@ -56,8 +57,7 @@
 .selection-container {
   display: flex;
   flex-direction: column;
-  color: white;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
 }
 

@@ -17,10 +17,11 @@ class LoginCard extends React.Component {
     return (
       <div className="login-box">
         {this.props.loginStatus ? (
-          <>
+          <div style={{ marginTop: "1rem" }}>
             {this.props.registerStatus ? (
               <>
-                <div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{ width: "80px" }}>Username: </div>
                   <input
                     type="text"
                     onChange={this.inputHandler}
@@ -28,23 +29,31 @@ class LoginCard extends React.Component {
                     name="username"
                   ></input>
                 </div>
-                <div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{ width: "80px" }}>Password: </div>
                   <input
                     type="password"
                     onChange={this.inputHandler}
                     value={this.state.password}
                     name="password"
                   ></input>
-                  <div>
-                    <input
-                      type="text"
-                      onChange={this.inputHandler}
-                      value={this.state.email}
-                      name="email"
-                    ></input>
-                  </div>
                 </div>
-                <div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{ width: "80px" }}>E-mail: </div>
+                  <input
+                    type="text"
+                    onChange={this.inputHandler}
+                    value={this.state.email}
+                    name="email"
+                  ></input>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginBottom: "1rem",
+                  }}
+                >
                   <button
                     onClick={() =>
                       this.props.loginHandler({
@@ -64,7 +73,8 @@ class LoginCard extends React.Component {
             ) : (
               <>
                 {" "}
-                <div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{ width: "80px" }}>Username: </div>
                   <input
                     type="text"
                     onChange={this.inputHandler}
@@ -72,7 +82,8 @@ class LoginCard extends React.Component {
                     name="username"
                   ></input>
                 </div>
-                <div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <div style={{ width: "80px" }}>Password: </div>
                   <input
                     type="password"
                     onChange={this.inputHandler}
@@ -80,7 +91,26 @@ class LoginCard extends React.Component {
                     name="password"
                   ></input>
                 </div>
-                <div>
+                {this.props.errorMsg ? (
+                  <div
+                    style={{
+                      textAlign: "right",
+                      fontSize: "0.85rem",
+                      marginTop: "0",
+                      marginRight: "1.75rem",
+                      color: "#b71c1c",
+                    }}
+                  >
+                    {this.props.errorMsg}!
+                  </div>
+                ) : null}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginBottom: "1rem",
+                  }}
+                >
                   <button
                     onClick={() =>
                       this.props.loginHandler({
@@ -94,13 +124,10 @@ class LoginCard extends React.Component {
                   <button onClick={() => this.props.toggleRegister()}>
                     Register
                   </button>
-                  {this.props.errorMsg ? (
-                    <div>{this.props.errorMsg}</div>
-                  ) : null}
                 </div>
               </>
             )}
-          </>
+          </div>
         ) : null}
       </div>
     );

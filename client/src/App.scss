@@ -1,6 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;1,700&display=swap");
+
+* {
+  font-family: "Jost", sans-serif;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
 .main-container {
   display: flex;
   flex-direction: column;
   background-color: #0c2040;
   min-height: 100vh;
+  background-image: url("./assets/main-bg.png");
+  padding: 1rem;
 }

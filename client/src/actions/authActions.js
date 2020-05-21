@@ -10,6 +10,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   SET_ROOM,
+  SET_TEAM,
 } from "../actions/types";
 
 //Check token and load user
@@ -95,4 +96,8 @@ export const login = ({ username, password }) => (dispatch) => {
 
 export const setRoom = ({ room }) => (dispatch) => {
   dispatch({ type: SET_ROOM, payload: room });
+};
+
+export const setTeam = ({ team, enemy }) => (dispatch) => {
+  dispatch({ type: SET_TEAM, payload: { team, enemy } });
 };

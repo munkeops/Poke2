@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
   //! If both players have their statuses as 'ready', you can proceed to execute what you want (in this case, logging 'YAY BOTH READY')
   socket.on("play-turn", ({ username, room, gameStart }) => {
     console.log(room);
-    console.log(activePlayers);
+
     activePlayers[room][socket.id].status = "ready";
 
     let entries = Object.values(activePlayers[room]);
@@ -89,8 +89,13 @@ io.on("connection", (socket) => {
     });
     if (flag === true) {
       if (gameStart) {
+        enemy = entries.filter((entry) => entry.id !== socket.id);
+        console.log("Enemy team: ", enemy[0].team);
+        console.log("USERNAME: ", username);
         io.to(room).emit("starting-game", {
           team: activePlayers[room][socket.id].team,
+          enemy: enemy[0].team,
+          username,
         });
       }
     }

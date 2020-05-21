@@ -8,6 +8,7 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   SET_ROOM,
+  SET_TEAM,
 } from "../actions/types";
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
   isLoading: false,
   user: null,
   room: null,
+  team: null,
 };
 
 export default function (state = initialState, action) {
@@ -58,6 +60,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         room: action.payload,
+      };
+    case SET_TEAM:
+      console.log("TEAM: ", action.payload);
+      return {
+        ...state,
+        team: action.payload.team,
+        enemy: action.payload.enemy,
       };
     default:
       return state;

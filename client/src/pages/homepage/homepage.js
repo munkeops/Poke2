@@ -5,7 +5,7 @@ import "./homepage.styles.scss";
 import { Layout } from "../layout";
 import socketIO from "socket.io-client";
 import { connect } from "react-redux";
-import { setRoom } from "../../actions/authActions";
+import { setRoom, setTeam } from "../../actions/authActions";
 import { Redirect } from "react-router";
 
 import StartCard from "../../components/start-card/startCard";
@@ -102,7 +102,7 @@ class Homepage extends React.Component {
         console.log(room);
         this.props.setRoom({ room });
         socket.emit("play-turn", {
-          username: this.props.username,
+          username: this.props.user.username,
           room,
           gameStart: true,
         });
@@ -111,8 +111,15 @@ class Homepage extends React.Component {
       }
     );
 
-    socket.on("starting-game", ({ team }) => {
-      console.log(team);
+    socket.on("starting-game", ({ team, enemy, username }) => {
+      console.log("USERS: ", username, this.props.user.username);
+      if (this.props.user.username !== username) {
+        console.log("WOW ENEMY");
+        this.props.setTeam({ team: enemy, enemy: team });
+      } else {
+        this.props.setTeam({ team, enemy });
+      }
+
       this.setState({ redirect: true });
     });
   };
@@ -206,4 +213,4 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
   room: state.auth.room,
 });
-export default connect(mapStateToProps, { setRoom })(Homepage);
+export default connect(mapStateToProps, { setRoom, setTeam })(Homepage);

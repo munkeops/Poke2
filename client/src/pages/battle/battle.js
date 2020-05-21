@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import "./battle.styles.scss";
 import { Layout } from "../layout";
-import BattleBox from "../../components/battle-box/battleBox";
+import BattleBox from "../../components/battle-box/battleBox.jsx";
 import Logs from "../../components/logs/logs";
 
 class Battle extends React.Component {

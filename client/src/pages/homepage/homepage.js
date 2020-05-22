@@ -7,9 +7,6 @@ import { setRoom, setTeam, setSocket } from "../../actions/authActions";
 import { Redirect } from "react-router";
 
 import StartCard from "../../components/start-card/startCard";
-import physMove from "../../assets/physical.png";
-import specMove from "../../assets/special.png";
-import neutMove from "../../assets/neutral.png";
 
 class Homepage extends React.Component {
   constructor(props) {
@@ -21,10 +18,34 @@ class Homepage extends React.Component {
           {
             name: "alakazam",
             moves: [
-              { name: "psychic", power: "90", type: "special", acc: 100 },
-              { name: "focus blast", power: "130", type: "special", acc: 75 },
-              { name: "shadow ball", power: "90", type: "special", acc: 100 },
-              { name: "psyshock", power: "90", type: "special", acc: 100 },
+              {
+                name: "psychic",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "psychic",
+              },
+              {
+                name: "focus blast",
+                power: "130",
+                type: "special",
+                acc: 75,
+                moveType: "fighting",
+              },
+              {
+                name: "shadow ball",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "ghost",
+              },
+              {
+                name: "psyshock",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "psychic",
+              },
             ],
             stats: {
               hp: 400,
@@ -40,15 +61,34 @@ class Homepage extends React.Component {
           {
             name: "terrakion",
             moves: [
-              { name: "stone edge", power: "120", type: "physical", acc: 80 },
+              {
+                name: "stone edge",
+                power: "120",
+                type: "physical",
+                acc: 80,
+                moveType: "rock",
+              },
               {
                 name: "close combat",
                 power: "125",
                 type: "physical",
                 acc: 100,
+                moveType: "fighting",
               },
-              { name: "earthquake", power: "100", type: "physical", acc: 100 },
-              { name: "quick attack", power: "40", type: "physical", acc: 100 },
+              {
+                name: "earthquake",
+                power: "100",
+                type: "physical",
+                acc: 100,
+                moveType: "ground",
+              },
+              {
+                name: "quick attack",
+                power: "40",
+                type: "physical",
+                acc: 100,
+                moveType: "normal",
+              },
             ],
             stats: {
               hp: 400,
@@ -59,20 +99,39 @@ class Homepage extends React.Component {
               spe: 400,
             },
             active: 0,
-            types: ["psychic"],
+            types: ["rock", "fighting"],
           },
           {
             name: "garchomp",
             moves: [
-              { name: "stone edge", power: "120", type: "physical", acc: 80 },
+              {
+                name: "stone edge",
+                power: "120",
+                type: "physical",
+                acc: 80,
+                moveType: "rock",
+              },
               {
                 name: "fire blast",
                 power: "110",
                 type: "special",
                 acc: 80,
+                moveType: "fire",
               },
-              { name: "earthquake", power: "100", type: "physical", acc: 100 },
-              { name: "dragon claw", power: "80", type: "physical", acc: 100 },
+              {
+                name: "earthquake",
+                power: "100",
+                type: "physical",
+                acc: 100,
+                moveType: "ground",
+              },
+              {
+                name: "dragon claw",
+                power: "80",
+                type: "physical",
+                acc: 100,
+                moveType: "dragon",
+              },
             ],
             stats: {
               hp: 400,
@@ -83,15 +142,39 @@ class Homepage extends React.Component {
               spe: 400,
             },
             active: 0,
-            types: ["psychic"],
+            types: ["dragon", "ground"],
           },
           {
             name: "serperior",
             moves: [
-              { name: "leaf storm", power: "90", type: "special", acc: 100 },
-              { name: "giga drain", power: "130", type: "special", acc: 75 },
-              { name: "hp fire", power: "90", type: "special", acc: 100 },
-              { name: "dragon pulse", power: "90", type: "special", acc: 100 },
+              {
+                name: "leaf storm",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "grass",
+              },
+              {
+                name: "giga drain",
+                power: "130",
+                type: "special",
+                acc: 75,
+                moveType: "grass",
+              },
+              {
+                name: "hp fire",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "grass",
+              },
+              {
+                name: "dragon pulse",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "grass",
+              },
             ],
             stats: {
               hp: 400,
@@ -102,15 +185,39 @@ class Homepage extends React.Component {
               spe: 400,
             },
             active: 0,
-            types: ["psychic"],
+            types: ["grass"],
           },
           {
             name: "starmie",
             moves: [
-              { name: "psychic", power: "90", type: "special", acc: 100 },
-              { name: "hydro pump", power: "130", type: "special", acc: 75 },
-              { name: "shadow ball", power: "90", type: "special", acc: 100 },
-              { name: "psyshock", power: "90", type: "special", acc: 100 },
+              {
+                name: "psychic",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "psychic",
+              },
+              {
+                name: "hydro pump",
+                power: "130",
+                type: "special",
+                acc: 75,
+                moveType: "water",
+              },
+              {
+                name: "shadow ball",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "ghost",
+              },
+              {
+                name: "psyshock",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "psychic",
+              },
             ],
             stats: {
               hp: 400,
@@ -121,15 +228,39 @@ class Homepage extends React.Component {
               spe: 400,
             },
             active: 0,
-            types: ["psychic"],
+            types: ["psychic", "water"],
           },
           {
             name: "talonflame",
             moves: [
-              { name: "flare blitz", power: "120", type: "physical", acc: 100 },
-              { name: "brave bird", power: "120", type: "physical", acc: 75 },
-              { name: "steel wing", power: "80", type: "physical", acc: 100 },
-              { name: "roost", power: "-", type: "n/a", acc: 100 },
+              {
+                name: "flare blitz",
+                power: "120",
+                type: "physical",
+                acc: 100,
+                moveType: "fire",
+              },
+              {
+                name: "brave bird",
+                power: "120",
+                type: "physical",
+                acc: 75,
+                moveType: "flying",
+              },
+              {
+                name: "steel wing",
+                power: "80",
+                type: "physical",
+                acc: 100,
+                moveType: "steel",
+              },
+              {
+                name: "roost",
+                power: "-",
+                type: "n/a",
+                acc: 100,
+                moveType: "flying",
+              },
             ],
             stats: {
               hp: 400,
@@ -140,7 +271,7 @@ class Homepage extends React.Component {
               spe: 400,
             },
             active: 0,
-            types: ["psychic"],
+            types: ["flying", "fire"],
           },
         ],
 
@@ -148,10 +279,34 @@ class Homepage extends React.Component {
           {
             name: "slowbro",
             moves: [
-              { name: "psychic", power: "90", type: "special", acc: 100 },
-              { name: "scald", power: "80", type: "special", acc: 75 },
-              { name: "shadow ball", power: "90", type: "special", acc: 100 },
-              { name: "psyshock", power: "90", type: "special", acc: 100 },
+              {
+                name: "psychic",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "psychic",
+              },
+              {
+                name: "scald",
+                power: "80",
+                type: "special",
+                acc: 75,
+                moveType: "water",
+              },
+              {
+                name: "shadow ball",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "ghost",
+              },
+              {
+                name: "psyshock",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "psychic",
+              },
             ],
             stats: {
               hp: 400,
@@ -162,15 +317,39 @@ class Homepage extends React.Component {
               spe: 400,
             },
             active: 0,
-            types: ["psychic"],
+            types: ["psychic", "water"],
           },
           {
             name: "infernape",
             moves: [
-              { name: "close combat", power: "125", type: "", acc: 100 },
-              { name: "flare blitz", power: "120", type: "physical", acc: 75 },
-              { name: "mach punch", power: "40", type: "physical", acc: 100 },
-              { name: "fire blase", power: "110", type: "physical", acc: 100 },
+              {
+                name: "close combat",
+                power: "125",
+                type: "",
+                acc: 100,
+                moveType: "fighting",
+              },
+              {
+                name: "flare blitz",
+                power: "120",
+                type: "physical",
+                acc: 75,
+                moveType: "fire",
+              },
+              {
+                name: "mach punch",
+                power: "40",
+                type: "physical",
+                acc: 100,
+                moveType: "fighting",
+              },
+              {
+                name: "fire blase",
+                power: "110",
+                type: "physical",
+                acc: 100,
+                moveType: "fire",
+              },
             ],
             stats: {
               hp: 400,
@@ -181,15 +360,39 @@ class Homepage extends React.Component {
               spe: 400,
             },
             active: 0,
-            types: ["psychic"],
+            types: ["fire", "fighting"],
           },
           {
             name: "haxorus",
             moves: [
-              { name: "outrage", power: "120", type: "physical", acc: 100 },
-              { name: "earthquake", power: "100", type: "physical", acc: 75 },
-              { name: "dragon claw", power: "90", type: "physical", acc: 100 },
-              { name: "dragon dance", power: "-", type: "n/a", acc: 100 },
+              {
+                name: "outrage",
+                power: "120",
+                type: "physical",
+                acc: 100,
+                moveType: "dragon",
+              },
+              {
+                name: "earthquake",
+                power: "100",
+                type: "physical",
+                acc: 75,
+                moveType: "ground",
+              },
+              {
+                name: "dragon claw",
+                power: "90",
+                type: "physical",
+                acc: 100,
+                moveType: "dragon",
+              },
+              {
+                name: "dragon dance",
+                power: "-",
+                type: "n/a",
+                acc: 100,
+                moveType: "dragon",
+              },
             ],
             stats: {
               hp: 400,
@@ -205,10 +408,34 @@ class Homepage extends React.Component {
           {
             name: "bisharp",
             moves: [
-              { name: "knock off", power: "97", type: "physical", acc: 100 },
-              { name: "sucker punch", power: "90", type: "physical", acc: 75 },
-              { name: "iron head", power: "90", type: "physical", acc: 100 },
-              { name: "swords dance", power: "-", type: "n/a", acc: 100 },
+              {
+                name: "knock off",
+                power: "97",
+                type: "physical",
+                acc: 100,
+                moveType: "dark",
+              },
+              {
+                name: "sucker punch",
+                power: "90",
+                type: "physical",
+                acc: 75,
+                moveType: "dark",
+              },
+              {
+                name: "iron head",
+                power: "90",
+                type: "physical",
+                acc: 100,
+                moveType: "steel",
+              },
+              {
+                name: "swords dance",
+                power: "-",
+                type: "n/a",
+                acc: 100,
+                moveType: "normal",
+              },
             ],
             stats: {
               hp: 400,
@@ -224,10 +451,34 @@ class Homepage extends React.Component {
           {
             name: "hippowdon",
             moves: [
-              { name: "earthquake", power: "100", type: "physical", acc: 100 },
-              { name: "stone edge", power: "120", type: "physical", acc: 75 },
-              { name: "sandstorm", power: "-", type: "n/a", acc: 100 },
-              { name: "slack off", power: "-", type: "n/a", acc: 100 },
+              {
+                name: "earthquake",
+                power: "100",
+                type: "physical",
+                acc: 100,
+                moveType: "grounw",
+              },
+              {
+                name: "stone edge",
+                power: "120",
+                type: "physical",
+                acc: 75,
+                moveType: "rock",
+              },
+              {
+                name: "sandstorm",
+                power: "-",
+                type: "n/a",
+                acc: 100,
+                moveType: "rock",
+              },
+              {
+                name: "slack off",
+                power: "-",
+                type: "n/a",
+                acc: 100,
+                moveType: "normal",
+              },
             ],
             stats: {
               hp: 400,
@@ -243,10 +494,34 @@ class Homepage extends React.Component {
           {
             name: "latios",
             moves: [
-              { name: "psychic", power: "90", type: "special", acc: 100 },
-              { name: "draco meteor", power: "130", type: "special", acc: 95 },
-              { name: "shadow ball", power: "90", type: "special", acc: 100 },
-              { name: "psyshock", power: "90", type: "special", acc: 100 },
+              {
+                name: "psychic",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "psychic",
+              },
+              {
+                name: "draco meteor",
+                power: "130",
+                type: "special",
+                acc: 95,
+                moveType: "dragon",
+              },
+              {
+                name: "shadow ball",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "ghost",
+              },
+              {
+                name: "psyshock",
+                power: "90",
+                type: "special",
+                acc: 100,
+                moveType: "psychic",
+              },
             ],
             stats: {
               hp: 400,
@@ -301,7 +576,6 @@ class Homepage extends React.Component {
   showTeams = () => this.setState({ showTeams: !this.state.showTeams });
   setActive = (index) => this.setState({ activeTeam: index });
   updateTeam = async (name) => {
-    console.log("NAME: ", this.state.userMoves[name]);
     await this.setState({
       newTeam: this.state.newTeam.concat({
         name: name,
@@ -315,37 +589,57 @@ class Homepage extends React.Component {
     let pokemon = this.state.pokeData.find((item) => item.name === member.name);
     return (
       <div className="cp-poke">
-        <img
-          src={`https://img.pokemondb.net/sprites/bank/normal/${pokemon.name}.png`}
-          alt={pokemon.name}
-        ></img>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          {/* {this.state.userMoves.map((move) => {
-            return <input type="text" readOnly value={move.name}></input>;
-          })} */}
-        </div>
-        <button
-          onClick={() =>
-            this.setState({
-              viewMoves: false,
-              moveList: [],
-            })
-          }
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
         >
-          Save Pokemon
-        </button>
+          <img
+            src={`https://img.pokemondb.net/sprites/bank/normal/${pokemon.name}.png`}
+            alt={pokemon.name}
+          ></img>
+          <button
+            onClick={() => {
+              if (
+                !this.state.userMoves[pokemon.name] ||
+                this.state.userMoves[pokemon.name].length < 4
+              ) {
+                return alert("You must pick atleast 4 moves");
+              }
+              return this.setState({
+                viewMoves: false,
+                moveList: [],
+              });
+            }}
+          >
+            Save Pokemon
+          </button>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {this.state.userMoves[pokemon.name]
+            ? this.state.userMoves[pokemon.name].map((move) => {
+                return <input type="text" readOnly value={move.name}></input>;
+              })
+            : null}
+        </div>
       </div>
     );
   };
   saveTeam = () => {
     let decided = [];
     let stats = {};
+    let types = [];
+    console.log(Object.keys(this.state.userMoves));
+    if (Object.keys(this.state.userMoves.length < 6)) {
+      console.log("LESS");
+      return alert("Please select 6 pokemon");
+    }
     for (let [key, value] of Object.entries(this.state.userMoves)) {
-      console.log(key, value);
       fetch(`https://pokeapi.co/api/v2/pokemon/${key}`)
         .then((data) => data.json())
         .then((res) => {
-          console.log(res);
           stats.spe =
             (Math.floor(
               (2 * res.stats[0].base_stat + 31 + Math.floor(252 / 4) * 100) /
@@ -388,7 +682,14 @@ class Homepage extends React.Component {
             ) +
             100 +
             10;
-          decided.push({ name: key, moves: value, stats: stats });
+          res.types.map((entry) => types.push(entry.type.name));
+          decided.push({
+            name: key,
+            moves: value,
+            stats: stats,
+            types: types,
+            active: 0,
+          });
         });
     }
     this.setState({
@@ -422,7 +723,6 @@ class Homepage extends React.Component {
     );
 
     socket.on("starting-game", ({ team, enemy, username }) => {
-      console.log("USERS: ", username, this.props.user.username);
       if (this.props.user.username !== username) {
         this.props.setTeam({ team: enemy, enemy: team, origTeam: enemy });
       } else {
@@ -447,6 +747,7 @@ class Homepage extends React.Component {
                   power: final.power,
                   type: final.damage_class.name,
                   accuracy: final.accuracy,
+                  moveType: final.type.name,
                 });
                 return 1;
               })
@@ -459,13 +760,13 @@ class Homepage extends React.Component {
         return 1;
       });
   };
-  addMove = ({ pokemon, name, power, type }) => {
+  addMove = ({ pokemon, name, power, type, acc, moveType }) => {
     let temp = this.state.userMoves;
     if (!temp[pokemon]) {
       temp[pokemon] = [];
     }
-    temp[pokemon].push({ name, power, type });
-    console.log(temp);
+    temp[pokemon].push({ name, power, type, acc, moveType });
+
     this.setState({
       userMoves: temp,
     });
@@ -496,8 +797,10 @@ class Homepage extends React.Component {
           <div className="selection-half">
             <div className="selection-container">
               <div className="cur-team"></div>
-              <div className="save-button" onClick={this.saveTeam}>
-                SAVE TEAM
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div className="save-button" onClick={this.saveTeam}>
+                  SAVE TEAM
+                </div>
               </div>
               <div className="poke-finder">
                 <div className="searchbox"></div>
@@ -519,6 +822,7 @@ class Homepage extends React.Component {
                             power: move.power,
                             type: move.type,
                             acc: move.accuracy,
+                            moveType: move.moveType,
                           })
                         }
                       >
@@ -526,32 +830,88 @@ class Homepage extends React.Component {
                         <div style={{ width: "30%" }}>
                           {move.power || "N/A"}
                         </div>
-                        <div style={{ width: "10%" }}>
-                          {move.class === "physical" ? (
-                            <img
-                              src={physMove}
-                              style={{ width: "100%", height: "auto" }}
-                              alt="physical"
-                            ></img>
-                          ) : move.class === "special" ? (
-                            <img
-                              src={specMove}
-                              style={{ width: "100%", height: "auto" }}
-                              alt="special"
-                            ></img>
-                          ) : (
-                            <img
-                              src={neutMove}
-                              style={{ width: "100%", height: "auto" }}
-                              alt="n/a"
-                            ></img>
-                          )}
-                        </div>
+
+                        {move.type === "physical" ? (
+                          <div className="phys-block"></div>
+                        ) : move.type === "special" ? (
+                          <div className="spec-block"></div>
+                        ) : (
+                          <div className="norm-block"></div>
+                        )}
                       </div>
                     );
                   })
                 ) : (
                   <div>
+                    <div
+                      className="poke-row"
+                      style={{
+                        borderRadius: "0px",
+                        borderBottom: "1px solid grey",
+                      }}
+                    >
+                      <div
+                        className="single-stat"
+                        style={{ width: "170px", textAlign: "center" }}
+                      >
+                        Name
+                      </div>
+                      <div
+                        className="single-stat"
+                        style={{
+                          margin: "auto",
+                          marginRight: "20px",
+                        }}
+                      >
+                        Speed
+                      </div>
+                      <div
+                        className="single-stat"
+                        style={{
+                          margin: "auto",
+                          marginRight: "20px",
+                        }}
+                      >
+                        {" "}
+                        SpDef
+                      </div>
+                      <div
+                        className="single-stat"
+                        style={{
+                          margin: "auto",
+                          marginRight: "20px",
+                        }}
+                      >
+                        SpA
+                      </div>
+                      <div
+                        className="single-stat"
+                        style={{
+                          margin: "auto",
+                          marginRight: "20px",
+                        }}
+                      >
+                        Defense{" "}
+                      </div>
+                      <div
+                        className="single-stat"
+                        style={{
+                          margin: "auto",
+                          marginRight: "20px",
+                        }}
+                      >
+                        Attack
+                      </div>
+                      <div
+                        className="single-stat"
+                        style={{
+                          margin: "auto",
+                          marginRight: "20px",
+                        }}
+                      >
+                        HP
+                      </div>
+                    </div>
                     {this.state.pokeData.length < 100 ? (
                       <div>LOADING ... </div>
                     ) : (

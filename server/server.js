@@ -73,15 +73,23 @@ io.on("connection", (socket) => {
   //! If both players have their statuses as 'ready', you can proceed to execute what you want (in this case, logging 'YAY BOTH READY')
   socket.on(
     "play-turn",
-    ({ username, room, gameStart, firstTurn, selected }) => {
+    ({ username, room, gameStart, firstTurn, selected, stats }) => {
       if (firstTurn) {
         console.log("FIRST TURN");
         console.log("selected:  ", selected);
       }
       activePlayers[room][socket.id].status = "ready";
+      if (selected) {
+        myPokemonIndex = activePlayers[room][socket.id].team.findIndex(
+          (pokemon) => pokemon.name === selected
+        );
+        console.log(myPokemonIndex);
+        activePlayers[room][socket.id].team[myPokemonIndex].active = 1;
+      }
 
       let entries = Object.values(activePlayers[room]);
 
+      console.log(entries);
       //Checking if both users in the room are ready, you can basically do the computation and emit an event here
       flag = true;
       if (entries.length < 2) {
@@ -94,13 +102,32 @@ io.on("connection", (socket) => {
       });
       if (flag === true) {
         if (gameStart) {
-          enemy = entries.filter((entry) => entry.id !== socket.id);
+          let enemy = entries.filter((entry) => entry.id !== socket.id);
+          activePlayers[room][socket.id].status = "pending";
+          activePlayers[room][enemy[0].id].status = "pending";
+          console.log(activePlayers);
           io.to(room).emit("starting-game", {
             team: activePlayers[room][socket.id].team,
             enemy: enemy[0].team,
             username,
           });
         } else if (firstTurn) {
+          let myTeam = entries.find((entry) => entry.id === socket.id);
+          let enemyTeam = entries.find((entry) => entry.id !== socket.id);
+          console.log(myTeam.team);
+          let selectedPoke = myTeam.team.find(
+            (pokemon) => pokemon.active === 1
+          );
+          let enemySelectedPoke = enemyTeam.team.find(
+            (pokemon) => pokemon.active === 1
+          );
+          activePlayers[room][socket.id].status = "pending";
+          activePlayers[room][enemyTeam.id].status = "pending";
+          io.to(room).emit("first-turn", {
+            selectedPoke,
+            enemySelectedPoke,
+            username,
+          });
         }
       }
     }

@@ -12,6 +12,7 @@ class Homepage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      reqMade: false,
       showTeams: false,
       teamList: [
         [
@@ -704,6 +705,12 @@ class Homepage extends React.Component {
       return alert("You must be logged in to play a game");
     }
 
+    if (this.state.reqMade) {
+      return;
+    }
+
+    this.setState({ reqMade: true });
+
     const socket = socketIO("http://localhost:5000");
     this.props.setSocket(socket);
     socket.emit(
@@ -789,9 +796,15 @@ class Homepage extends React.Component {
               teamList={this.state.teamList}
               activeTeam={this.state.activeTeam}
             />
-            <div className="start-btn" onClick={this.findGame}>
-              Find game
-            </div>
+            {this.state.reqMade ? (
+              <div className="start-btn" style={{ backgroundColor: "grey" }}>
+                Searching ...
+              </div>
+            ) : (
+              <div className="start-btn" onClick={this.findGame}>
+                Find game
+              </div>
+            )}
           </div>
 
           <div className="selection-half">

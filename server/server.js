@@ -83,8 +83,13 @@ io.on("connection", (socket) => {
         myPokemonIndex = activePlayers[room][socket.id].team.findIndex(
           (pokemon) => pokemon.name === selected
         );
-        console.log(myPokemonIndex);
+
         activePlayers[room][socket.id].team[myPokemonIndex].active = 1;
+        console.log("confirming selection: ", selected);
+        let activeBitches = activePlayers[room][socket.id].team.filter(
+          (pokemon) => pokemon.active === 1
+        );
+        console.log("ACTIVE BITCHES:", activeBitches);
       }
 
       let entries = Object.values(activePlayers[room]);
@@ -92,7 +97,7 @@ io.on("connection", (socket) => {
         activePlayers[room][socket.id].move = move;
         activePlayers[room][socket.id].activePokemon = pokemon;
       }
-      console.log(entries);
+
       //Checking if both users in the room are ready, you can basically do the computation and emit an event here
       flag = true;
       if (entries.length < 2) {
@@ -108,7 +113,7 @@ io.on("connection", (socket) => {
           let enemy = entries.filter((entry) => entry.id !== socket.id);
           activePlayers[room][socket.id].status = "pending";
           activePlayers[room][enemy[0].id].status = "pending";
-          console.log(activePlayers);
+
           io.to(room).emit("starting-game", {
             team: activePlayers[room][socket.id].team,
             enemy: enemy[0].team,
@@ -117,7 +122,7 @@ io.on("connection", (socket) => {
         } else if (firstTurn) {
           let myTeam = entries.find((entry) => entry.id === socket.id);
           let enemyTeam = entries.find((entry) => entry.id !== socket.id);
-          console.log(myTeam.team);
+
           let selectedPoke = myTeam.team.find(
             (pokemon) => pokemon.active === 1
           );
@@ -134,36 +139,86 @@ io.on("connection", (socket) => {
         } else {
           let myTeam = entries.find((entry) => entry.id === socket.id);
           let enemyTeam = entries.find((entry) => entry.id !== socket.id);
-          console.log(myTeam.team);
           let selectedPoke = myTeam.team.find(
             (pokemon) => pokemon.active === 1
           );
           let enemySelectedPoke = enemyTeam.team.find(
             (pokemon) => pokemon.active === 1
           );
+          console.log("MY SELECTION: ", selectedPoke.name);
+          console.log("ENEMY SELECTION: ", enemySelectedPoke.name);
           //////// ! Damage calculation
           let myStats = selectedPoke.stats;
           let enemyStats = enemySelectedPoke.stats;
           if (myStats.spe >= enemyStats.spe) {
-            enemyStats.hp *= 0.5;
-            myStats.hp *= 0.5;
+            enemyStats.hp -= 100;
+
             if (enemyStats.hp <= 0) {
-              return io.to(room).emit("win", {
-                username: myTeam.username,
-              });
-            } else if (myStats.hp <= 0) {
-              return io.io(room).emit("win", {
-                username: enemyTeam.username,
-              });
-            } else {
-              activePlayers[room][socket.id].status = "pending";
               activePlayers[room][enemyTeam.id].status = "pending";
-              io.to(room).emit("next-turn", {
-                myStats,
-                enemyStats,
-                username,
+              enemySelectedPoke.active = 0;
+              return io.to(room).emit("death", {
+                username: myTeam.username,
+                deadPoke: enemySelectedPoke,
               });
             }
+            myStats.hp -= 20;
+            if (myStats.hp <= 0) {
+              activePlayers[room][socket.id].status = "pending";
+              selectedPoke.active = 0;
+              return io.to(room).emit("death", {
+                username: enemyTeam.username,
+                pokemon: selectedPoke,
+              });
+            }
+            activePlayers[room][socket.id].status = "pending";
+            activePlayers[room][enemyTeam.id].status = "pending";
+            let myIndex = myTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            let enemyIndex = enemyTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            myTeam.team[myIndex].stats = myStats;
+            enemyTeam.team[enemyIndex].stats = enemyStats;
+            return io.to(room).emit("next-turn", {
+              myPoke: myTeam.team[myIndex],
+              enemyPoke: enemyTeam.team[enemyIndex],
+              username,
+            });
+          } else {
+            myStats.hp -= 20;
+            if (myStats.hp <= 0) {
+              activePlayers[room][socket.id].status = "pending";
+              selectedPoke.active = 0;
+              return io.to(room).emit("death", {
+                username: enemyTeam.username,
+                pokemon: selectedPoke,
+              });
+            }
+            enemyStats.hp -= 100;
+            if (enemyStats.hp <= 0) {
+              activePlayers[room][enemyTeam.id].status = "pending";
+              enemySelectedPoke.active = 0;
+              return io.to(room).emit("death", {
+                username: myTeam.username,
+                deadPoke: enemySelectedPoke,
+              });
+            }
+            activePlayers[room][socket.id].status = "pending";
+            activePlayers[room][enemyTeam.id].status = "pending";
+            let myIndex = myTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            let enemyIndex = enemyTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            myTeam.team[myIndex].stats = myStats;
+            enemyTeam.team[enemyIndex].stats = enemyStats;
+            return io.to(room).emit("next-turn", {
+              myPoke: myTeam.team[myIndex],
+              enemyPoke: enemyTeam.team[enemyIndex],
+              username,
+            });
           }
         }
       }

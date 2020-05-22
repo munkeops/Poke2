@@ -10,33 +10,45 @@ class BattleBox extends React.Component {
       activePoke: null,
       enemySelected: null,
       origTeam: this.props.origTeam,
+      disabled: false,
+      dead: false,
+      gameStart: true,
     };
   }
 
   firstTurn = (name) => {
     const socket = this.props.socket;
 
+    let selectedPoke = this.props.team.find((pokemon) => pokemon.name === name);
+    selectedPoke.active = 1;
+    if (selectedPoke.dead) {
+      return alert(`${name} is dead!, choose a different pokemon`);
+    }
+    console.log("PICKING NEXT: ", name);
+    this.setState({ disabled: true });
     socket.emit("play-turn", {
       username: this.props.user.username,
       room: this.props.room,
       firstTurn: true,
       selected: name,
     });
-    let selectedPoke = this.props.team.find(
-      (pokemon) => pokemon.name === "name"
-    );
 
-    this.setState({ activePoke: selectedPoke });
+    console.log("NEWLY SELECTED: ", selectedPoke);
+    this.setState({ activePoke: selectedPoke, dead: false });
     socket.on("first-turn", ({ selectedPoke, enemySelectedPoke, username }) => {
       if (this.props.user.username === username) {
         this.setState({
           activePoke: selectedPoke,
           enemySelected: enemySelectedPoke,
+          disabled: false,
+          gameStart: false,
         });
       } else {
         this.setState({
           enemySelected: selectedPoke,
           activePoke: enemySelectedPoke,
+          disabled: false,
+          gameStart: false,
         });
       }
     });
@@ -85,58 +97,63 @@ class BattleBox extends React.Component {
 
   commit = (move) => {
     const socket = this.props.socket;
-
+    this.setState({ disabled: true });
     socket.emit("play-turn", {
       username: this.props.user.username,
       room: this.props.room,
       move,
     });
 
-    socket.on("next-turn", ({ myStats, enemyStats, username }) => {
-      let stats, oppStats;
+    socket.on("next-turn", ({ myPoke, enemyPoke, username }) => {
       if (this.props.user.username === username) {
-        stats = myStats;
-        oppStats = enemyStats;
-        let newActivePoke = this.state.activePoke;
-        newActivePoke.stats = stats;
-        let newOppPoke = this.state.enemySelected;
-        newOppPoke.stats = enemyStats;
         let myIndex = this.props.team.findIndex(
-          (pokemon) => pokemon.name === newActivePoke.name
+          (pokemon) => pokemon.name === myPoke.name
         );
-        console.log("INDEX FOUND: ", myIndex);
+
         let prevTeam = this.props.team;
-        prevTeam[myIndex] = newActivePoke;
+        prevTeam[myIndex] = myPoke;
         this.props.updateTeam(prevTeam);
         return this.setState({
-          activePoke: newActivePoke,
-          enemySelected: newOppPoke,
+          activePoke: myPoke,
+          enemySelected: enemyPoke,
+          disabled: false,
         });
       }
-      stats = enemyStats;
-      oppStats = myStats;
-      let newActivePoke = this.state.activePoke;
-      newActivePoke.stats = stats;
-      let newOppPoke = this.state.enemySelected;
-      newOppPoke.stats = enemyStats;
+
       let myIndex = this.props.team.findIndex(
-        (pokemon) => pokemon.name === newActivePoke.name
+        (pokemon) => pokemon.name === enemyPoke.name
       );
-      console.log("INDEX FOUND: ", myIndex);
+
       let prevTeam = this.props.team;
-      prevTeam[myIndex] = newActivePoke;
+      prevTeam[myIndex] = enemyPoke;
       this.props.updateTeam(prevTeam);
       return this.setState({
-        activePoke: newActivePoke,
-        enemySelected: newOppPoke,
+        activePoke: enemyPoke,
+        enemySelected: myPoke,
+        disabled: false,
       });
+    });
+
+    socket.on("death", ({ username, deadPoke }) => {
+      if (this.props.user.username !== username) {
+        let updatedTeam = this.props.team;
+        let dead = updatedTeam.find(
+          (pokemon) => pokemon.name === deadPoke.name
+        );
+        dead.dead = true;
+        dead.active = 0;
+
+        this.setState({ disabled: false, activePoke: null, dead: true });
+      } else {
+        this.setState({ enemySelected: null });
+      }
     });
   };
   render() {
     return (
       <div className="battle-box">
         <div className="battle">
-          {this.state.enemySelected === null ? (
+          {this.state.gameStart ? (
             <div>
               <div className="enemy">
                 {" "}
@@ -186,123 +203,131 @@ class BattleBox extends React.Component {
             </div>
           ) : (
             <div>
-              <div className="enemy">
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-end",
-                    maxHeight: "119px",
-                  }}
-                >
-                  {" "}
+              {this.state.enemySelected ? (
+                <div className="enemy">
                   <div
                     style={{
-                      height: "15px",
-                      width: "100%",
-                      backgroundColor: "grey",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-end",
+                      maxHeight: "119px",
                     }}
                   >
+                    {" "}
                     <div
                       style={{
                         height: "15px",
-                        backgroundColor: "#388e3c",
-                        width: `${
-                          (this.state.enemySelected.stats.hp /
-                            this.state.enemySelected.stats.hpTotal) *
-                          100
-                        }%`,
+                        width: "100%",
+                        backgroundColor: "grey",
                       }}
-                    ></div>
+                    >
+                      <div
+                        style={{
+                          height: "15px",
+                          backgroundColor: "#388e3c",
+                          width: `${
+                            (this.state.enemySelected.stats.hp /
+                              this.state.enemySelected.stats.hpTotal) *
+                            100
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                    <div>
+                      {this.state.enemySelected.stats.hp} /{" "}
+                      {this.state.enemySelected.stats.hpTotal}
+                    </div>
+                    <img
+                      style={{ width: "100%", height: "auto" }}
+                      src={`http://www.pkparaiso.com/imagenes/xy/sprites/animados/${this.state.enemySelected.name}.gif`}
+                      alt={this.state.enemySelected.name}
+                    ></img>
                   </div>
-                  <div>
-                    {this.state.enemySelected.stats.hp} /{" "}
-                    {this.state.enemySelected.stats.hpTotal}
-                  </div>
-                  <img
-                    style={{ width: "100%", height: "auto" }}
-                    src={`http://www.pkparaiso.com/imagenes/xy/sprites/animados/${this.state.enemySelected.name}.gif`}
-                    alt={this.state.enemySelected.name}
-                  ></img>
                 </div>
-              </div>
-              <div className="team">
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-end",
-                    maxHeight: "119px",
-                  }}
-                >
+              ) : null}
+              {this.state.activePoke ? (
+                <div className="team">
                   <div
                     style={{
-                      height: "15px",
-                      width: "100%",
-                      backgroundColor: "grey",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-end",
+                      maxHeight: "119px",
                     }}
                   >
                     <div
                       style={{
                         height: "15px",
-                        backgroundColor: "#388e3c",
-                        width: `${
-                          (this.state.activePoke.stats.hp /
-                            this.state.activePoke.stats.hpTotal) *
-                          100
-                        }%`,
+                        width: "100%",
+                        backgroundColor: "grey",
                       }}
-                    ></div>
-                  </div>
+                    >
+                      <div
+                        style={{
+                          height: "15px",
+                          backgroundColor: "#388e3c",
+                          width: `${
+                            (this.state.activePoke.stats.hp /
+                              this.state.activePoke.stats.hpTotal) *
+                            100
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
 
-                  <div>
-                    {this.state.activePoke.stats.hp}/
-                    {this.state.activePoke.stats.hpTotal}
+                    <div>
+                      {this.state.activePoke.stats.hp}/
+                      {this.state.activePoke.stats.hpTotal}
+                    </div>
+                    <img
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                      src={`http://www.pkparaiso.com/imagenes/xy/sprites/animados-espalda/${this.state.activePoke.name}.gif`}
+                      alt={this.state.activePoke.name}
+                    ></img>
                   </div>
-                  <img
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                    src={`http://www.pkparaiso.com/imagenes/xy/sprites/animados-espalda/${this.state.activePoke.name}.gif`}
-                    alt={this.state.activePoke.name}
-                  ></img>
                 </div>
-              </div>
+              ) : null}
             </div>
           )}
         </div>
-        <div className="pokemons">
-          {this.props.team.map((pokemon) => {
-            return (
-              <div
-                className="poke-card"
-                key={pokemon.name}
-                onClick={() => this.firstTurn(pokemon.name)}
-              >
-                <div style={{ display: "flex", verticalAlign: "center" }}>
-                  <img
-                    src={`https://img.pokemondb.net/sprites/sword-shield/icon/${pokemon.name}.png`}
-                    style={{ height: "45px", width: "auto" }}
-                    alt={pokemon.name}
-                  ></img>
-                  <p style={{ margin: "auto" }}>{pokemon.name}</p>
-                </div>
-                <div>
-                  <p
-                    style={{
-                      width: `${
-                        (pokemon.stats.hp / pokemon.stats.hpTotal) * 90
-                      }%`,
-                      backgroundColor: "green",
-                      height: "6px",
-                      marginLeft: "0",
-                      marginTop: "8px",
-                    }}
-                  ></p>
+        {this.state.disabled ? null : (
+          <div className="pokemons">
+            {this.props.team.map((pokemon) => {
+              if (pokemon.dead) {
+                pokemon.stats.hp = 0;
+              }
+              return (
+                <div
+                  className="poke-card"
+                  key={pokemon.name}
+                  onClick={() => this.firstTurn(pokemon.name)}
+                >
+                  <div style={{ display: "flex", verticalAlign: "center" }}>
+                    <img
+                      src={`https://img.pokemondb.net/sprites/sword-shield/icon/${pokemon.name}.png`}
+                      style={{ height: "45px", width: "auto" }}
+                      alt={pokemon.name}
+                    ></img>
+                    <p style={{ margin: "auto" }}>{pokemon.name}</p>
+                  </div>
                   <div>
-                    {pokemon.stats.hp} / {pokemon.stats.hpTotal}
-                    {/* {this.state.activePoke ? (
+                    <p
+                      style={{
+                        width: `${
+                          (pokemon.stats.hp / pokemon.stats.hpTotal) * 90
+                        }%`,
+                        backgroundColor: "green",
+                        height: "6px",
+                        marginLeft: "0",
+                        marginTop: "8px",
+                      }}
+                    ></p>
+                    <div>
+                      {pokemon.stats.hp} / {pokemon.stats.hpTotal}
+                      {/* {this.state.activePoke ? (
                             pokemonOrig.name === this.state.activePoke.name ? (
                               <p>
                                 {this.state.activePoke.stats.hp} /{" "}
@@ -316,47 +341,52 @@ class BattleBox extends React.Component {
                               {pokemonOrig.stats.hp} / {pokemonOrig.stats.hp}
                             </p>
                           )} */}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="moves">
-          {this.state.enemySelected === null ? (
-            <div></div>
-          ) : (
-            this.state.activePoke.moves.map((move) => {
-              let typeBg = this.setColor(move.moveType);
-              return (
-                <div
-                  key={move.name}
-                  style={{
-                    backgroundColor: `${typeBg[0]}`,
-                    color: `${typeBg[1]}`,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    margin: "1rem",
-                    padding: "0.75rem",
-                    border: "1px solid black",
-                    borderRadius: "16px",
-                  }}
-                  onClick={() => this.commit(move)}
-                >
-                  <div>{move.name}</div>
-
-                  <div style={{ display: "flex" }}>
-                    <div style={{ padding: "5px", border: "1px solid black" }}>
-                      {move.type}
                     </div>
-                    <div style={{ margin: "auto" }}>{move.power}</div>
                   </div>
                 </div>
               );
-            })
-          )}
-        </div>
+            })}
+          </div>
+        )}
+        {this.state.disabled ? null : (
+          <div className="moves">
+            {this.state.enemySelected === null || this.state.dead ? (
+              <div></div>
+            ) : (
+              this.state.activePoke.moves.map((move) => {
+                let typeBg = this.setColor(move.moveType);
+                return (
+                  <div
+                    key={move.name}
+                    style={{
+                      backgroundColor: `${typeBg[0]}`,
+                      color: `${typeBg[1]}`,
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      margin: "1rem",
+                      padding: "0.75rem",
+                      border: "1px solid black",
+                      borderRadius: "16px",
+                    }}
+                    onClick={() => this.commit(move)}
+                  >
+                    <div>{move.name}</div>
+
+                    <div style={{ display: "flex" }}>
+                      <div
+                        style={{ padding: "5px", border: "1px solid black" }}
+                      >
+                        {move.type}
+                      </div>
+                      <div style={{ margin: "auto" }}>{move.power}</div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        )}
       </div>
     );
   }

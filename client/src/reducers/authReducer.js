@@ -79,7 +79,6 @@ export default function (state = initialState, action) {
         socket: action.payload,
       };
     case UPDATE_TEAM:
-      console.log(state.origTeam, action.payload);
       return {
         ...state,
         team: action.payload,

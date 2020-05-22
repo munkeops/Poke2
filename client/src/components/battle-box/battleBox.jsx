@@ -2,13 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 
 import "./battleBox.styles.scss";
-
+import { updateTeam } from "../../actions/authActions";
 class BattleBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       activePoke: null,
       enemySelected: null,
+      origTeam: this.props.origTeam,
     };
   }
 
@@ -24,10 +25,9 @@ class BattleBox extends React.Component {
     let selectedPoke = this.props.team.find(
       (pokemon) => pokemon.name === "name"
     );
-    console.log(selectedPoke);
+
     this.setState({ activePoke: selectedPoke });
     socket.on("first-turn", ({ selectedPoke, enemySelectedPoke, username }) => {
-      console.log(enemySelectedPoke, selectedPoke, username);
       if (this.props.user.username === username) {
         this.setState({
           activePoke: selectedPoke,
@@ -83,6 +83,55 @@ class BattleBox extends React.Component {
     }
   };
 
+  commit = (move) => {
+    const socket = this.props.socket;
+
+    socket.emit("play-turn", {
+      username: this.props.user.username,
+      room: this.props.room,
+      move,
+    });
+
+    socket.on("next-turn", ({ myStats, enemyStats, username }) => {
+      let stats, oppStats;
+      if (this.props.user.username === username) {
+        stats = myStats;
+        oppStats = enemyStats;
+        let newActivePoke = this.state.activePoke;
+        newActivePoke.stats = stats;
+        let newOppPoke = this.state.enemySelected;
+        newOppPoke.stats = enemyStats;
+        let myIndex = this.props.team.findIndex(
+          (pokemon) => pokemon.name === newActivePoke.name
+        );
+        console.log("INDEX FOUND: ", myIndex);
+        let prevTeam = this.props.team;
+        prevTeam[myIndex] = newActivePoke;
+        this.props.updateTeam(prevTeam);
+        return this.setState({
+          activePoke: newActivePoke,
+          enemySelected: newOppPoke,
+        });
+      }
+      stats = enemyStats;
+      oppStats = myStats;
+      let newActivePoke = this.state.activePoke;
+      newActivePoke.stats = stats;
+      let newOppPoke = this.state.enemySelected;
+      newOppPoke.stats = enemyStats;
+      let myIndex = this.props.team.findIndex(
+        (pokemon) => pokemon.name === newActivePoke.name
+      );
+      console.log("INDEX FOUND: ", myIndex);
+      let prevTeam = this.props.team;
+      prevTeam[myIndex] = newActivePoke;
+      this.props.updateTeam(prevTeam);
+      return this.setState({
+        activePoke: newActivePoke,
+        enemySelected: newOppPoke,
+      });
+    });
+  };
   render() {
     return (
       <div className="battle-box">
@@ -146,6 +195,30 @@ class BattleBox extends React.Component {
                     maxHeight: "119px",
                   }}
                 >
+                  {" "}
+                  <div
+                    style={{
+                      height: "15px",
+                      width: "100%",
+                      backgroundColor: "grey",
+                    }}
+                  >
+                    <div
+                      style={{
+                        height: "15px",
+                        backgroundColor: "#388e3c",
+                        width: `${
+                          (this.state.enemySelected.stats.hp /
+                            this.state.enemySelected.stats.hpTotal) *
+                          100
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+                  <div>
+                    {this.state.enemySelected.stats.hp} /{" "}
+                    {this.state.enemySelected.stats.hpTotal}
+                  </div>
                   <img
                     style={{ width: "100%", height: "auto" }}
                     src={`http://www.pkparaiso.com/imagenes/xy/sprites/animados/${this.state.enemySelected.name}.gif`}
@@ -162,6 +235,30 @@ class BattleBox extends React.Component {
                     maxHeight: "119px",
                   }}
                 >
+                  <div
+                    style={{
+                      height: "15px",
+                      width: "100%",
+                      backgroundColor: "grey",
+                    }}
+                  >
+                    <div
+                      style={{
+                        height: "15px",
+                        backgroundColor: "#388e3c",
+                        width: `${
+                          (this.state.activePoke.stats.hp /
+                            this.state.activePoke.stats.hpTotal) *
+                          100
+                        }%`,
+                      }}
+                    ></div>
+                  </div>
+
+                  <div>
+                    {this.state.activePoke.stats.hp}/
+                    {this.state.activePoke.stats.hpTotal}
+                  </div>
                   <img
                     style={{
                       width: "100%",
@@ -177,7 +274,6 @@ class BattleBox extends React.Component {
         </div>
         <div className="pokemons">
           {this.props.team.map((pokemon) => {
-            console.log(pokemon);
             return (
               <div
                 className="poke-card"
@@ -192,31 +288,36 @@ class BattleBox extends React.Component {
                   ></img>
                   <p style={{ margin: "auto" }}>{pokemon.name}</p>
                 </div>
-
-                {this.props.origTeam.map((pokemonOrig) => {
-                  if (pokemonOrig.name === pokemon.name) {
-                    return (
-                      <div style={{ textAlign: "center" }}>
-                        <p
-                          style={{
-                            width: `${
-                              (pokemon.stats.hp / pokemonOrig.stats.hp) * 90
-                            }%`,
-                            backgroundColor: "green",
-                            height: "6px",
-                            margin: "auto",
-                            marginTop: "8px",
-                          }}
-                        ></p>
-                        <div>
-                          {pokemon.stats.hp}/{pokemonOrig.stats.hp}
-                        </div>
-                      </div>
-                    );
-                  } else {
-                    return null;
-                  }
-                })}
+                <div>
+                  <p
+                    style={{
+                      width: `${
+                        (pokemon.stats.hp / pokemon.stats.hpTotal) * 90
+                      }%`,
+                      backgroundColor: "green",
+                      height: "6px",
+                      marginLeft: "0",
+                      marginTop: "8px",
+                    }}
+                  ></p>
+                  <div>
+                    {pokemon.stats.hp} / {pokemon.stats.hpTotal}
+                    {/* {this.state.activePoke ? (
+                            pokemonOrig.name === this.state.activePoke.name ? (
+                              <p>
+                                {this.state.activePoke.stats.hp} /{" "}
+                                {pokemonOrig.stats.hp}
+                              </p>
+                            ) : (
+                              <p>{pokemonOrig.stats.hp}</p>
+                            )
+                          ) : (
+                            <p>
+                              {pokemonOrig.stats.hp} / {pokemonOrig.stats.hp}
+                            </p>
+                          )} */}
+                  </div>
+                </div>
               </div>
             );
           })}
@@ -226,7 +327,6 @@ class BattleBox extends React.Component {
             <div></div>
           ) : (
             this.state.activePoke.moves.map((move) => {
-              console.log(move);
               let typeBg = this.setColor(move.moveType);
               return (
                 <div
@@ -242,6 +342,7 @@ class BattleBox extends React.Component {
                     border: "1px solid black",
                     borderRadius: "16px",
                   }}
+                  onClick={() => this.commit(move)}
                 >
                   <div>{move.name}</div>
 
@@ -271,4 +372,4 @@ const mapStateToProps = (state) => ({
   origTeam: state.auth.origTeam,
   socket: state.auth.socket,
 });
-export default connect(mapStateToProps)(BattleBox);
+export default connect(mapStateToProps, { updateTeam })(BattleBox);

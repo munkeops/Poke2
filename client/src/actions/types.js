@@ -11,3 +11,4 @@ export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const SET_ROOM = "SET_ROOM";
 export const SET_TEAM = "SET_TEAM";
 export const SET_SOCKET = "SET_SOCKET";
+export const UPDATE_TEAM = "UPDATE_TEAM";

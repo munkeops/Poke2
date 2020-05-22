@@ -12,6 +12,7 @@ import {
   SET_ROOM,
   SET_TEAM,
   SET_SOCKET,
+  UPDATE_TEAM,
 } from "../actions/types";
 
 //Check token and load user
@@ -105,4 +106,8 @@ export const setTeam = ({ team, enemy, origTeam }) => (dispatch) => {
 
 export const setSocket = (socket) => (dispatch) => {
   dispatch({ type: SET_SOCKET, payload: socket });
+};
+
+export const updateTeam = (team) => (dispatch) => {
+  dispatch({ type: UPDATE_TEAM, payload: team });
 };

@@ -73,7 +73,7 @@ io.on("connection", (socket) => {
   //! If both players have their statuses as 'ready', you can proceed to execute what you want (in this case, logging 'YAY BOTH READY')
   socket.on(
     "play-turn",
-    ({ username, room, gameStart, firstTurn, selected, stats }) => {
+    ({ username, room, gameStart, firstTurn, selected, pokemon, move }) => {
       if (firstTurn) {
         console.log("FIRST TURN");
         console.log("selected:  ", selected);
@@ -88,7 +88,10 @@ io.on("connection", (socket) => {
       }
 
       let entries = Object.values(activePlayers[room]);
-
+      if (move) {
+        activePlayers[room][socket.id].move = move;
+        activePlayers[room][socket.id].activePokemon = pokemon;
+      }
       console.log(entries);
       //Checking if both users in the room are ready, you can basically do the computation and emit an event here
       flag = true;
@@ -128,6 +131,40 @@ io.on("connection", (socket) => {
             enemySelectedPoke,
             username,
           });
+        } else {
+          let myTeam = entries.find((entry) => entry.id === socket.id);
+          let enemyTeam = entries.find((entry) => entry.id !== socket.id);
+          console.log(myTeam.team);
+          let selectedPoke = myTeam.team.find(
+            (pokemon) => pokemon.active === 1
+          );
+          let enemySelectedPoke = enemyTeam.team.find(
+            (pokemon) => pokemon.active === 1
+          );
+          //////// ! Damage calculation
+          let myStats = selectedPoke.stats;
+          let enemyStats = enemySelectedPoke.stats;
+          if (myStats.spe >= enemyStats.spe) {
+            enemyStats.hp *= 0.5;
+            myStats.hp *= 0.5;
+            if (enemyStats.hp <= 0) {
+              return io.to(room).emit("win", {
+                username: myTeam.username,
+              });
+            } else if (myStats.hp <= 0) {
+              return io.io(room).emit("win", {
+                username: enemyTeam.username,
+              });
+            } else {
+              activePlayers[room][socket.id].status = "pending";
+              activePlayers[room][enemyTeam.id].status = "pending";
+              io.to(room).emit("next-turn", {
+                myStats,
+                enemyStats,
+                username,
+              });
+            }
+          }
         }
       }
     }

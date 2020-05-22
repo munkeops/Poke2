@@ -10,6 +10,7 @@ import {
   SET_ROOM,
   SET_TEAM,
   SET_SOCKET,
+  UPDATE_TEAM,
 } from "../actions/types";
 
 const initialState = {
@@ -19,6 +20,7 @@ const initialState = {
   user: null,
   room: null,
   team: null,
+  origTeam: null,
 };
 
 export default function (state = initialState, action) {
@@ -75,6 +77,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         socket: action.payload,
+      };
+    case UPDATE_TEAM:
+      console.log(state.origTeam, action.payload);
+      return {
+        ...state,
+        team: action.payload,
       };
     default:
       return state;

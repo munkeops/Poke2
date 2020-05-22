@@ -3,7 +3,7 @@ import "./homepage.styles.scss";
 import { Layout } from "../layout";
 import socketIO from "socket.io-client";
 import { connect } from "react-redux";
-import { setRoom, setTeam } from "../../actions/authActions";
+import { setRoom, setTeam, setSocket } from "../../actions/authActions";
 import { Redirect } from "react-router";
 
 import StartCard from "../../components/start-card/startCard";
@@ -34,6 +34,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic"],
           },
           {
             name: "terrakion",
@@ -56,6 +58,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic"],
           },
           {
             name: "garchomp",
@@ -78,6 +82,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic"],
           },
           {
             name: "serperior",
@@ -95,6 +101,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic"],
           },
           {
             name: "starmie",
@@ -112,6 +120,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic"],
           },
           {
             name: "talonflame",
@@ -129,6 +139,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic"],
           },
         ],
 
@@ -149,6 +161,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic"],
           },
           {
             name: "infernape",
@@ -166,6 +180,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic"],
           },
           {
             name: "haxorus",
@@ -183,6 +199,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["dragon"],
           },
           {
             name: "bisharp",
@@ -200,6 +218,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["dark", "steel"],
           },
           {
             name: "hippowdon",
@@ -217,6 +237,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["ground"],
           },
           {
             name: "latios",
@@ -234,6 +256,8 @@ class Homepage extends React.Component {
               spa: 400,
               spe: 400,
             },
+            active: 0,
+            types: ["psychic", "dragon"],
           },
         ],
       ],
@@ -380,6 +404,7 @@ class Homepage extends React.Component {
     }
 
     const socket = socketIO("http://localhost:5000");
+    this.props.setSocket(socket);
     socket.emit(
       "join",
       {
@@ -608,4 +633,6 @@ const mapStateToProps = (state) => ({
   user: state.auth.user,
   room: state.auth.room,
 });
-export default connect(mapStateToProps, { setRoom, setTeam })(Homepage);
+export default connect(mapStateToProps, { setRoom, setTeam, setSocket })(
+  Homepage
+);

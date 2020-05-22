@@ -11,6 +11,7 @@ import {
   REGISTER_FAIL,
   SET_ROOM,
   SET_TEAM,
+  SET_SOCKET,
 } from "../actions/types";
 
 //Check token and load user
@@ -100,4 +101,8 @@ export const setRoom = ({ room }) => (dispatch) => {
 
 export const setTeam = ({ team, enemy, origTeam }) => (dispatch) => {
   dispatch({ type: SET_TEAM, payload: { team, enemy, origTeam } });
+};
+
+export const setSocket = (socket) => (dispatch) => {
+  dispatch({ type: SET_SOCKET, payload: socket });
 };

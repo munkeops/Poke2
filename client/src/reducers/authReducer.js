@@ -9,6 +9,7 @@ import {
   REGISTER_FAIL,
   SET_ROOM,
   SET_TEAM,
+  SET_SOCKET,
 } from "../actions/types";
 
 const initialState = {
@@ -68,6 +69,12 @@ export default function (state = initialState, action) {
         team: action.payload.team,
         enemy: action.payload.enemy,
         origTeam: action.payload.origTeam,
+      };
+    case SET_SOCKET:
+      console.log("SOCKET: ", action.payload);
+      return {
+        ...state,
+        socket: action.payload,
       };
     default:
       return state;

@@ -71,38 +71,40 @@ io.on("connection", (socket) => {
   //! When a player emits the 'play-turn' event, (in this case, typing a message and hitting send)
   //! he will send over his username and room ID. You will then find the relevant entry for that user in the dictionary and set the status to 'ready'
   //! If both players have their statuses as 'ready', you can proceed to execute what you want (in this case, logging 'YAY BOTH READY')
-  socket.on("play-turn", ({ username, room, gameStart }) => {
-    console.log(room);
+  socket.on(
+    "play-turn",
+    ({ username, room, gameStart, firstTurn, selected }) => {
+      if (firstTurn) {
+        console.log("FIRST TURN");
+        console.log("selected:  ", selected);
+      }
+      activePlayers[room][socket.id].status = "ready";
 
-    activePlayers[room][socket.id].status = "ready";
+      let entries = Object.values(activePlayers[room]);
 
-    let entries = Object.values(activePlayers[room]);
-
-    //Checking if both users in the room are ready, you can basically do the computation and emit an event here
-    flag = true;
-    if (entries.length < 2) {
-      flag = false;
-    }
-    entries.map((entry) => {
-      if (entry.status === "pending") {
+      //Checking if both users in the room are ready, you can basically do the computation and emit an event here
+      flag = true;
+      if (entries.length < 2) {
         flag = false;
       }
-    });
-    if (flag === true) {
-      if (gameStart) {
-        enemy = entries.filter((entry) => entry.id !== socket.id);
-        console.log(enemy);
-        console.log("Enemy team: ", enemy[0].team);
-        console.log("USERNAME: ", username);
-        io.to(room).emit("starting-game", {
-          team: activePlayers[room][socket.id].team,
-          enemy: enemy[0].team,
-          username,
-        });
+      entries.map((entry) => {
+        if (entry.status === "pending") {
+          flag = false;
+        }
+      });
+      if (flag === true) {
+        if (gameStart) {
+          enemy = entries.filter((entry) => entry.id !== socket.id);
+          io.to(room).emit("starting-game", {
+            team: activePlayers[room][socket.id].team,
+            enemy: enemy[0].team,
+            username,
+          });
+        } else if (firstTurn) {
+        }
       }
     }
-    console.log(entries);
-  });
+  );
 
   socket.on("disconnect", () => {
     console.log("Connection lost");

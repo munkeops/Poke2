@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+
 import "./battle.styles.scss";
 import { Layout } from "../layout";
 import BattleBox from "../../components/battle-box/battleBox.jsx";
@@ -16,11 +16,7 @@ class Battle extends React.Component {
       <Layout>
         <h2>Room #{this.props.room}</h2>
         <div className="container">
-          <BattleBox
-            team={this.props.team}
-            enemy={this.props.enemy}
-            origTeam={this.props.origTeam}
-          />
+          <BattleBox />
           <Logs />
         </div>
       </Layout>
@@ -28,13 +24,4 @@ class Battle extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error,
-  user: state.auth.user,
-  room: state.auth.room,
-  team: state.auth.team,
-  enemy: state.auth.enemy,
-  origTeam: state.auth.origTeam,
-});
-export default connect(mapStateToProps)(Battle);
+export default Battle;

@@ -20,24 +20,19 @@ class BattleBox extends React.Component {
       redirect: false,
     };
   }
-//   componentDidMount() {
-//     // window.addEventListener("beforeunload", function (event) {
-//     //      console.log("adding are your sure you want to leave check")
-//     //      event.returnValue = "Hellooww"
-//     //  })
-//     console.log(this.props.enemy)
-//      if( this.props.enemy==undefined ){
-//       this.props.history.push("/home");
-//       // this.setState({
-//       //   loginCheck:false
-//       // })
-//     }
-//     else{
-//       // this.setState({
-//       //   loginCheck:true
-//       // })
-//     }
-//  }
+  componentWillMount() {
+    
+    try{
+      if( this.props.enemy==undefined ){
+        console.log(this.props.enemy)
+      this.props.history.push("/home");
+      }
+    }
+    catch(err){
+      this.props.history.push("/home");
+    }
+    
+ }
   firstTurn = (name) => {
     const socket = this.props.socket;
 
@@ -191,7 +186,8 @@ class BattleBox extends React.Component {
             <div>
               <div className="enemy">
                 {" "}
-                {this.props.enemy.map((pokemon) => {
+                
+                { this.props.enemy.map((pokemon) => {
                   return (
                     <div
                       style={{

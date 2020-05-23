@@ -16,7 +16,6 @@ class Battle extends React.Component {
     };
     
   }
-  // const history = useHistory();
     check(){
       if(this.props.room==undefined || this.props.enemy==undefined ){
         this.props.history.push("/home");
@@ -35,17 +34,7 @@ class Battle extends React.Component {
            event.returnValue = "Hellooww"
        })
   
-      //  if( this.props.enemy==undefined ){
-      //   this.props.history.push("/home");
-      //   this.setState({
-      //     loginCheck:false
-      //   })
-      // }
-      // else{
-      //   this.setState({
-      //     loginCheck:true
-      //   })
-      // }
+     
    }
 
  componentWillUnmount() {

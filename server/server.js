@@ -265,6 +265,7 @@ io.on("connection", (socket) => {
     io.to(foundRoom).emit("win", {
       username: enemyPlayer.username,
     });
+    delete activePlayers[room];
   });
 });
 

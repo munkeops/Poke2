@@ -25,11 +25,11 @@ class BattleBox extends React.Component {
     try{
       if( this.props.enemy==undefined ){
         console.log(this.props.enemy)
-      this.props.history.push("/home");
+      this.props.history.push("/");
       }
     }
     catch(err){
-      this.props.history.push("/home");
+      this.props.history.push("/w");
     }
     
  }

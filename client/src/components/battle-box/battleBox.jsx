@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import "./battleBox.styles.scss";
 import { updateTeam } from "../../actions/authActions";
 import { Redirect } from "react-router";
+import { withRouter } from "react-router-dom";
+
 class BattleBox extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +20,24 @@ class BattleBox extends React.Component {
       redirect: false,
     };
   }
-
+//   componentDidMount() {
+//     // window.addEventListener("beforeunload", function (event) {
+//     //      console.log("adding are your sure you want to leave check")
+//     //      event.returnValue = "Hellooww"
+//     //  })
+//     console.log(this.props.enemy)
+//      if( this.props.enemy==undefined ){
+//       this.props.history.push("/home");
+//       // this.setState({
+//       //   loginCheck:false
+//       // })
+//     }
+//     else{
+//       // this.setState({
+//       //   loginCheck:true
+//       // })
+//     }
+//  }
   firstTurn = (name) => {
     const socket = this.props.socket;
 
@@ -417,4 +436,4 @@ const mapStateToProps = (state) => ({
   origTeam: state.auth.origTeam,
   socket: state.auth.socket,
 });
-export default connect(mapStateToProps, { updateTeam })(BattleBox);
+export default withRouter(connect(mapStateToProps, { updateTeam })(BattleBox));

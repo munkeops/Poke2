@@ -54,6 +54,7 @@ io.on("connection", (socket) => {
       status: "pending",
       team: team,
       origTeam: team,
+      killCount: 0,
     };
 
     //Here, basically checking if the dictionary entry for that room already exists, if it doesn't we create a new one and populate it
@@ -156,6 +157,12 @@ io.on("connection", (socket) => {
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
               enemySelectedPoke.active = 0;
+              myTeam.killCount += 1;
+              if (myTeam.killCount === 6) {
+                return io.to(room).emit("win", {
+                  username: myTeam.username,
+                });
+              }
               return io.to(room).emit("death", {
                 username: myTeam.username,
                 deadPoke: enemySelectedPoke,
@@ -165,6 +172,12 @@ io.on("connection", (socket) => {
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
               selectedPoke.active = 0;
+              enemyTeam.killCount += 1;
+              if (enemyTeam.killCount === 6) {
+                return io.to(room).emit("win", {
+                  username: enemyTeam.username,
+                });
+              }
               return io.to(room).emit("death", {
                 username: enemyTeam.username,
                 pokemon: selectedPoke,
@@ -190,6 +203,12 @@ io.on("connection", (socket) => {
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
               selectedPoke.active = 0;
+              enemyTeam.killCount += 1;
+              if (enemyTeam.killCount === 6) {
+                return io.to(room).emit("win", {
+                  username: enemyTeam.username,
+                });
+              }
               return io.to(room).emit("death", {
                 username: enemyTeam.username,
                 pokemon: selectedPoke,
@@ -199,6 +218,12 @@ io.on("connection", (socket) => {
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
               enemySelectedPoke.active = 0;
+              myTeam.killCount += 1;
+              if (myTeam.killCount === 6) {
+                return io.to(room).emit("win", {
+                  username: myTeam.username,
+                });
+              }
               return io.to(room).emit("death", {
                 username: myTeam.username,
                 deadPoke: enemySelectedPoke,
@@ -227,6 +252,19 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("Connection lost");
+    let foundRoom;
+    for (let [room, entry] of Object.entries(activePlayers)) {
+      for (let socketId of Object.keys(entry)) {
+        if (socketId === socket.id) {
+          foundRoom = room;
+        }
+      }
+    }
+    let entries = Object.values(activePlayers[foundRoom]);
+    let enemyPlayer = entries.find((entry) => entry.id !== socket.id);
+    io.to(foundRoom).emit("win", {
+      username: enemyPlayer.username,
+    });
   });
 });
 

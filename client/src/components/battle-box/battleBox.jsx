@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import "./battleBox.styles.scss";
 import { updateTeam } from "../../actions/authActions";
+import { Redirect } from "react-router";
 class BattleBox extends React.Component {
   constructor(props) {
     super(props);
@@ -13,6 +14,8 @@ class BattleBox extends React.Component {
       disabled: false,
       dead: false,
       gameStart: true,
+      gameEnd: false,
+      redirect: false,
     };
   }
 
@@ -148,8 +151,20 @@ class BattleBox extends React.Component {
         this.setState({ enemySelected: null });
       }
     });
+
+    socket.on("win", ({ username }) => {
+      this.setState({ redirect: true });
+      if (this.props.user.username === username) {
+        return alert("You win, your rating has increased");
+      } else {
+        return alert("You lose, your rating has decreased");
+      }
+    });
   };
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
+    }
     return (
       <div className="battle-box">
         <div className="battle">

@@ -4,9 +4,9 @@ heroku:
   script:
       - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/poke2se.git
       # - git commit --allow-empty -m "Test pushing to Heroku at $(date)"
-      - git subtree push  --prefix client heroku master
+      - git subtree push  --prefix client heroku HEAD:master
       - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/poke2se-server.git
-      - git subtree push  --prefix server heroku master
+      - git subtree push  --prefix server heroku HEAD:master
       
   only:
       - master

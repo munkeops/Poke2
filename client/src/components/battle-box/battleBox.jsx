@@ -21,39 +21,59 @@ class BattleBox extends React.Component {
     };
   }
   componentWillMount() {
-    
-    try{
-      if( this.props.enemy==undefined ){
-        console.log(this.props.enemy)
-      this.props.history.push("/");
+    try {
+      if (this.props.enemy === undefined) {
+        console.log(this.props.enemy);
+        this.props.history.push("/");
       }
-    }
-    catch(err){
+    } catch (err) {
       this.props.history.push("/w");
     }
-    
- }
+  }
   firstTurn = (name) => {
     const socket = this.props.socket;
 
     let selectedPoke = this.props.team.find((pokemon) => pokemon.name === name);
     selectedPoke.active = 1;
+    let prevSelected = this.state.activePoke;
+    if (prevSelected && selectedPoke.name !== prevSelected.name) {
+      prevSelected.active = 0;
+    }
     if (selectedPoke.dead) {
       return alert(`${name} is dead!, choose a different pokemon`);
     }
+
     console.log("PICKING NEXT: ", name);
     this.setState({ disabled: true });
-    socket.emit("play-turn", {
-      username: this.props.user.username,
-      room: this.props.room,
-      firstTurn: true,
-      selected: name,
-    });
+    if (!this.state.dead && !this.state.gameStart) {
+      console.log("CHANGING");
+      socket.emit("play-turn", {
+        username: this.props.user.username,
+        room: this.props.room,
+        firstTurn: true,
+        selected: name,
+        changing: true,
+      });
+    } else {
+      socket.emit("play-turn", {
+        username: this.props.user.username,
+        room: this.props.room,
+        firstTurn: true,
+        selected: name,
+      });
+    }
 
     console.log("NEWLY SELECTED: ", selectedPoke);
     this.setState({ activePoke: selectedPoke, dead: false });
     socket.on("first-turn", ({ selectedPoke, enemySelectedPoke, username }) => {
       if (this.props.user.username === username) {
+        let myIndex = this.props.team.findIndex(
+          (pokemon) => pokemon.name === selectedPoke.name
+        );
+
+        let prevTeam = this.props.team;
+        prevTeam[myIndex] = selectedPoke;
+        this.props.updateTeam(prevTeam);
         this.setState({
           activePoke: selectedPoke,
           enemySelected: enemySelectedPoke,
@@ -61,6 +81,13 @@ class BattleBox extends React.Component {
           gameStart: false,
         });
       } else {
+        let myIndex = this.props.team.findIndex(
+          (pokemon) => pokemon.name === enemySelectedPoke.name
+        );
+
+        let prevTeam = this.props.team;
+        prevTeam[myIndex] = enemySelectedPoke;
+        this.props.updateTeam(prevTeam);
         this.setState({
           enemySelected: selectedPoke,
           activePoke: enemySelectedPoke,
@@ -186,8 +213,7 @@ class BattleBox extends React.Component {
             <div>
               <div className="enemy">
                 {" "}
-                
-                { this.props.enemy.map((pokemon) => {
+                {this.props.enemy.map((pokemon) => {
                   return (
                     <div
                       style={{

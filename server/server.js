@@ -74,12 +74,31 @@ io.on("connection", (socket) => {
   //! If both players have their statuses as 'ready', you can proceed to execute what you want (in this case, logging 'YAY BOTH READY')
   socket.on(
     "play-turn",
-    ({ username, room, gameStart, firstTurn, selected, pokemon, move }) => {
+    ({
+      username,
+      room,
+      gameStart,
+      firstTurn,
+      selected,
+      pokemon,
+      move,
+      changing,
+    }) => {
       if (firstTurn) {
         console.log("FIRST TURN");
         console.log("selected:  ", selected);
       }
       activePlayers[room][socket.id].status = "ready";
+      if (changing) {
+        let prevSelected = activePlayers[room][socket.id].team.find(
+          (pokemon) => pokemon.active === 1
+        );
+        prevSelected.active = 0;
+        console.log("SETTING NEW ACTIVE");
+        activePlayers[room][socket.id].changing = true;
+      } else {
+        activePlayers[room][socket.id].changing = false;
+      }
       if (selected) {
         myPokemonIndex = activePlayers[room][socket.id].team.findIndex(
           (pokemon) => pokemon.name === selected
@@ -151,6 +170,84 @@ io.on("connection", (socket) => {
           //////// ! Damage calculation
           let myStats = selectedPoke.stats;
           let enemyStats = enemySelectedPoke.stats;
+          if (myTeam.changing && !enemyTeam.changing) {
+            myStats.hp -= 20;
+            console.log("MY TEAM CHANGE");
+            if (myStats.hp <= 0) {
+              activePlayers[room][socket.id].status = "pending";
+              selectedPoke.active = 0;
+              enemyTeam.killCount += 1;
+
+              return io.to(room).emit("death", {
+                username: enemyTeam.username,
+                pokemon: selectedPoke,
+              });
+            }
+            activePlayers[room][socket.id].status = "pending";
+            activePlayers[room][enemyTeam.id].status = "pending";
+            let myIndex = myTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            let enemyIndex = enemyTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            myTeam.team[myIndex].stats = myStats;
+            enemyTeam.team[enemyIndex].stats = enemyStats;
+            return io.to(room).emit("first-turn", {
+              selectedPoke: myTeam.team[myIndex],
+              enemySelectedPoke: enemyTeam.team[enemyIndex],
+              username,
+            });
+          }
+
+          if (enemyTeam.changing && !myTeam.changing) {
+            enemyStats.hp -= 100;
+
+            if (enemyStats.hp <= 0) {
+              activePlayers[room][enemyTeam.id].status = "pending";
+              enemySelectedPoke.active = 0;
+              myTeam.killCount += 1;
+
+              return io.to(room).emit("death", {
+                username: myTeam.username,
+                deadPoke: enemySelectedPoke,
+              });
+            }
+            activePlayers[room][socket.id].status = "pending";
+            activePlayers[room][enemyTeam.id].status = "pending";
+            let myIndex = myTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            let enemyIndex = enemyTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+
+            console.log("EMITTING EVENT ON POKEMON CHANGE");
+            myTeam.team[myIndex].stats = myStats;
+            enemyTeam.team[enemyIndex].stats = enemyStats;
+            return io.to(room).emit("first-turn", {
+              selectedPoke: myTeam.team[myIndex],
+              enemySelectedPoke: enemyTeam.team[enemyIndex],
+              username,
+            });
+          }
+
+          if (enemyTeam.changing && myTeam.changing) {
+            let myIndex = myTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            let enemyIndex = enemyTeam.team.findIndex(
+              (pokemon) => pokemon.active === 1
+            );
+            myTeam.team[myIndex].stats = myStats;
+            enemyTeam.team[enemyIndex].stats = enemyStats;
+            console.log("EMITTING EVENT ON POKEMON CHANGE");
+            return io.to(room).emit("first-turn", {
+              myPoke: myTeam.team[myIndex],
+              enemyPoke: enemyTeam.team[enemyIndex],
+              username,
+            });
+          }
           if (myStats.spe >= enemyStats.spe) {
             enemyStats.hp -= 100;
 
@@ -260,12 +357,14 @@ io.on("connection", (socket) => {
         }
       }
     }
-    let entries = Object.values(activePlayers[foundRoom]);
-    let enemyPlayer = entries.find((entry) => entry.id !== socket.id);
-    io.to(foundRoom).emit("win", {
-      username: enemyPlayer.username,
-    });
-    delete activePlayers[room];
+    if (foundRoom) {
+      let entries = Object.values(activePlayers[foundRoom]);
+      let enemyPlayer = entries.find((entry) => entry.id !== socket.id);
+      io.to(foundRoom).emit("win", {
+        username: enemyPlayer.username,
+      });
+      delete activePlayers[foundRoom];
+    }
   });
 });
 

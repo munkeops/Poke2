@@ -86,7 +86,7 @@ export const login = ({ username, password }) => (dispatch) => {
   const body = JSON.stringify({ username, password });
 
   axios
-    .post("https://poke2se-server.herokuapp.com/auth", body, config)
+    .post("https://poke2se-server.herokuapp.com/api/auth", body, config)
     .then((res) => dispatch({ type: LOGIN_SUCCESS, payload: res.data }))
     .catch((err) => {
       dispatch(

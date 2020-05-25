@@ -16,17 +16,7 @@ class Battle extends React.Component {
     };
     
   }
-    check(){
-      if(this.props.room==undefined || this.props.enemy==undefined ){
-        this.props.history.push("/home");
-        return false
-      }
-      else{
-        this.setState({
-          loginCheck:true
-        })
-      }
-    }
+    
   
     componentDidMount() {
       window.addEventListener("beforeunload", function (event) {

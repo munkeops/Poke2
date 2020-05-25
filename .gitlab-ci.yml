@@ -1,0 +1,12 @@
+heroku:
+  stage: deploy
+  # image: node:latest
+  script:
+      - git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/poke2se.git
+      # - git commit --allow-empty -m "Test pushing to Heroku at $(date)"
+      - git subtree push  --prefix client heroku master
+      - git remote add herokuserver https://heroku:$HEROKU_API_KEY@git.heroku.com/poke2se-server.git
+      - git subtree push  --prefix server herokuserver master
+      
+  only:
+      - master

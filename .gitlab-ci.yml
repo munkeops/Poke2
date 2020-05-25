@@ -9,4 +9,4 @@ heroku:
       - git subtree push  --prefix server herokuserver master
       
   only:
-      - deployment
+      - master

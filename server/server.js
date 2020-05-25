@@ -167,11 +167,13 @@ io.on("connection", (socket) => {
           );
           console.log("MY SELECTION: ", selectedPoke.name);
           console.log("ENEMY SELECTION: ", enemySelectedPoke.name);
-          //////// ! Damage calculation
+          //////// ! Damage calculation (DUMMY)
           let myStats = selectedPoke.stats;
           let enemyStats = enemySelectedPoke.stats;
+          // ! In this case, myPlayer is the player whose move was registered second by the server
           if (myTeam.changing && !enemyTeam.changing) {
-            myStats.hp -= 20;
+            //If 1 player is switching a pokemon
+            myStats.hp -= 20; // TODO: Reduce the incoming Pokemons HP after calc
             console.log("MY TEAM CHANGE");
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
@@ -201,7 +203,7 @@ io.on("connection", (socket) => {
           }
 
           if (enemyTeam.changing && !myTeam.changing) {
-            enemyStats.hp -= 100;
+            enemyStats.hp -= 100; //TODO: Reduce the incoming Pokemon HP after calc
 
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
@@ -233,6 +235,7 @@ io.on("connection", (socket) => {
           }
 
           if (enemyTeam.changing && myTeam.changing) {
+            //! If both players are changing pokemon
             let myIndex = myTeam.team.findIndex(
               (pokemon) => pokemon.active === 1
             );
@@ -249,7 +252,8 @@ io.on("connection", (socket) => {
             });
           }
           if (myStats.spe >= enemyStats.spe) {
-            enemyStats.hp -= 100;
+            //! If neither are changing pokemon
+            enemyStats.hp -= 100; //TODO If this players pokemon is faster, calc enemy hp.
 
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
@@ -265,7 +269,8 @@ io.on("connection", (socket) => {
                 deadPoke: enemySelectedPoke,
               });
             }
-            myStats.hp -= 20;
+            myStats.hp -= 20; //TODO If after taking above damage, the "enemy" pokemon doesn't die,
+            // TODO Calc the other guys hp reduction
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
               selectedPoke.active = 0;
@@ -296,7 +301,8 @@ io.on("connection", (socket) => {
               username,
             });
           } else {
-            myStats.hp -= 20;
+            myStats.hp -= 20; //TODO Inverse of previous case. calculate hp reduction for "myStats" based on "enemyStats" first
+
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
               selectedPoke.active = 0;
@@ -311,7 +317,7 @@ io.on("connection", (socket) => {
                 pokemon: selectedPoke,
               });
             }
-            enemyStats.hp -= 100;
+            enemyStats.hp -= 100; //TODO: Following the previous calculation
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
               enemySelectedPoke.active = 0;

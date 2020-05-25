@@ -27,7 +27,7 @@ class BattleBox extends React.Component {
         this.props.history.push("/");
       }
     } catch (err) {
-      this.props.history.push("/w");
+      this.props.history.push("/");
     }
   }
   firstTurn = (name) => {

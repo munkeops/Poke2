@@ -20,7 +20,7 @@ export const loadUser = () => (dispatch, getState) => {
   //User loading
   dispatch({ type: USER_LOADING });
   axios
-    .get("http://localhost:5000/api/auth/user", tokenConfig(getState))
+    .get("https://poke2se-server.herokuapp.com//api/auth/user", tokenConfig(getState))
     .then((res) => {
       dispatch({ type: USER_LOADED, payload: res.data });
     })
@@ -42,7 +42,7 @@ export const register = ({ username, password, email }) => (dispatch) => {
   const body = JSON.stringify({ username, email, password });
 
   axios
-    .post("http://localhost:5000/api/users", body, config)
+    .post("https://poke2se-server.herokuapp.com/api/users", body, config)
     .then((res) => dispatch({ type: REGISTER_SUCCESS, payload: res.data }))
     .catch((err) => {
       dispatch(
@@ -86,7 +86,7 @@ export const login = ({ username, password }) => (dispatch) => {
   const body = JSON.stringify({ username, password });
 
   axios
-    .post("http://localhost:5000/api/auth", body, config)
+    .post("https://poke2se-server.herokuapp.com/auth", body, config)
     .then((res) => dispatch({ type: LOGIN_SUCCESS, payload: res.data }))
     .catch((err) => {
       dispatch(

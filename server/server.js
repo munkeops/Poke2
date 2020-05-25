@@ -371,4 +371,7 @@ io.on("connection", (socket) => {
 app.use("/api/users", require("./routes/users"));
 app.use("/api/auth", require("./routes/auth"));
 
-http.listen(5000, () => console.log("Server is listening at port 5000"));
+http.listen(
+  process.env.PORT || 5000
+  // 5000, () => console.log("Server is listening at port 5000")
+  );

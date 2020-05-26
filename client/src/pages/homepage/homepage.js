@@ -723,7 +723,7 @@ class Homepage extends React.Component {
 
     this.setState({ reqMade: true });
 
-    const socket = socketIO("http://poke2se-server.herokuapp.com");
+    const socket = socketIO("https://poke2se-server.herokuapp.com");
     this.props.setSocket(socket);
     socket.emit(
       "join",

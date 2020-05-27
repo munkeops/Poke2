@@ -60,7 +60,6 @@ class BattleBox extends React.Component {
       });
     }
 
-    console.log("NEWLY SELECTED: ", selectedPoke);
     this.setState({ activePoke: selectedPoke, dead: false });
     socket.on("first-turn", ({ selectedPoke, enemySelectedPoke, username }) => {
       if (this.props.user.username === username) {

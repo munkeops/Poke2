@@ -371,6 +371,7 @@ io.on("connection", (socket) => {
       });
       delete activePlayers[foundRoom];
     }
+    return 0;
   });
 });
 

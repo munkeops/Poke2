@@ -23,7 +23,6 @@ class BattleBox extends React.Component {
   componentWillMount() {
     try {
       if (this.props.enemy === undefined) {
-        console.log(this.props.enemy);
         this.props.history.push("/");
       }
     } catch (err) {
@@ -43,10 +42,8 @@ class BattleBox extends React.Component {
       return alert(`${name} is dead!, choose a different pokemon`);
     }
 
-    console.log("PICKING NEXT: ", name);
     this.setState({ disabled: true });
     if (!this.state.dead && !this.state.gameStart) {
-      console.log("CHANGING");
       socket.emit("play-turn", {
         username: this.props.user.username,
         room: this.props.room,
@@ -136,6 +133,8 @@ class BattleBox extends React.Component {
         return ["#424242", "white"];
       case "fairy":
         return ["#f8bbd0", "black"];
+      default:
+        return ["#cecece", "black"];
     }
   };
 
@@ -208,6 +207,7 @@ class BattleBox extends React.Component {
     }
     return (
       <div className="battle-box">
+        <h2>Room #{this.props.room}</h2>
         <div className="battle">
           {this.state.gameStart ? (
             <div>
@@ -243,6 +243,7 @@ class BattleBox extends React.Component {
                         justifyContent: "flex-end",
                         maxHeight: "119px",
                       }}
+                      key={pokemon.name}
                     >
                       <img
                         style={{

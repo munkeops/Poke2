@@ -59,13 +59,11 @@ export default function (state = initialState, action) {
         isLoading: false,
       };
     case SET_ROOM:
-      console.log("SETTING ROOM", action.payload);
       return {
         ...state,
         room: action.payload,
       };
     case SET_TEAM:
-      console.log("TEAM: ", action.payload);
       return {
         ...state,
         team: action.payload.team,
@@ -73,7 +71,6 @@ export default function (state = initialState, action) {
         origTeam: action.payload.origTeam,
       };
     case SET_SOCKET:
-      console.log("SOCKET: ", action.payload);
       return {
         ...state,
         socket: action.payload,

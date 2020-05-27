@@ -34,7 +34,6 @@ class Header extends React.Component {
     } else {
       this.props.login(newUser);
     }
-    console.log(username, password, email);
   };
   toggleLogin = () => {
     this.props.clearErrors();
@@ -59,8 +58,6 @@ class Header extends React.Component {
 
     if (this.state.toggleRegister) {
       if (isAuthenticated) {
-        console.log("AUTH DONE YAY");
-
         this.toggleRegister();
       }
     }

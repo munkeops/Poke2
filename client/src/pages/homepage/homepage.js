@@ -644,9 +644,8 @@ class Homepage extends React.Component {
     let decided = [];
     let stats = {};
     let types = [];
-    console.log(Object.keys(this.state.userMoves));
+
     if (Object.keys(this.state.userMoves.length < 6)) {
-      console.log("LESS");
       return alert("Please select 6 pokemon");
     }
     for (let [key, value] of Object.entries(this.state.userMoves)) {

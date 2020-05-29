@@ -44,7 +44,7 @@ let playerId = 0;
 function damagecalc(attackObject,defendingPoke){
 
   let damage_1 = (((2*10)/5)+2) * attackObject.move.pow ;            //the calculation was split up in parts for better readability although it is the same as on the referenced website.
-  let attackingPoke = attackingPoke.find(pokemon=>pokemon.active===1);
+  let attackingPoke = attackObject.find(pokemon=>pokemon.active===1);
   let damage_2 = (attackingPoke.stats.atk/defendingPoke.stats.def);
   damage = (((damage_1*damage_2)/50)+2) * attackObject.stats.mod;     // all calculations here are done in favor of "me" team due to it having higher speed
   return damage;

@@ -265,7 +265,7 @@ io.on("connection", (socket) => {
               username,
             });
           }
-          if (myStats.spe > enemyStats.spe) {
+          if (myStats.spe >= enemyStats.spe) {
             //! If neither are changing pokemon
             enemyStats.hp -= damagecalc(myTeam,enemySelectedPoke); //TODO If this players pokemon is faster, calc enemy hp.
 
@@ -283,7 +283,7 @@ io.on("connection", (socket) => {
                 deadPoke: enemySelectedPoke,
               });
             }
-            myStats.hp -= 20; //TODO If after taking above damage, the "enemy" pokemon doesn't die,
+            myStats.hp -= damagecalc(enemyTeam, selectedPoke); //TODO If after taking above damage, the "enemy" pokemon doesn't die,
             // TODO Calc the other guys hp reduction
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
@@ -315,8 +315,8 @@ io.on("connection", (socket) => {
               username,
             });
 
-            /*
-          } else if (myStats.spe < enemyStats.spe){
+            
+          } else if (myStats.spe <= enemyStats.spe){
             myStats.hp -= damagecalc(enemyTeam,selectedPoke); //TODO Inverse of previous case. calculate hp reduction for "myStats" based on "enemyStats" first
 
             if (myStats.hp <= 0) {
@@ -333,7 +333,7 @@ io.on("connection", (socket) => {
                 pokemon: selectedPoke,
               });
             }
-            enemyStats.hp -= 100; //TODO: Following the previous calculation
+            enemyStats.hp -= damagecalc(myTeam,enemySelectedPoke); //TODO: Following the previous calculation
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
               enemySelectedPoke.active = 0;
@@ -365,6 +365,7 @@ io.on("connection", (socket) => {
             });
           }
           
+          /*
           else if (myStats.spe === enemyStats.spe){
             
           rand = Math.floor(Math.random() * 2)

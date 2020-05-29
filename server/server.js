@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
 let activePlayers = {};
 let playerId = 0;
 
-function damageswitch(attackObject,defendingPoke){
+function damagecalc(attackObject,defendingPoke){
 
   let damage_1 = (((2*10)/5)+2) * attackObject.move.pow ;            //the calculation was split up in parts for better readability although it is the same as on the referenced website.
   let attackingPoke = pokemon1.find(pokemon=>pokemon1.active===1);

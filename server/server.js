@@ -44,7 +44,7 @@ let playerId = 0;
 function damagecalc(attackObject, defendingPoke) {
   console.log("ATTACKING: ", attackObject.move);
   console.log("DEFENDING: ", defendingPoke);
-  let damage_1 = ((2 * 10) / 5 + 2) * attackObject.move.pow; //the calculation was split up in parts for better readability although it is the same as on the referenced website.
+  let damage_1 = ((2 * 10) / 5 + 2) * attackObject.move.power; //the calculation was split up in parts for better readability although it is the same as on the referenced website.
   let attackingPoke = attackObject.team.find((pokemon) => pokemon.active === 1);
   console.log("ATTACKING POKE: ", attackingPoke);
   let damage_2 = attackingPoke.stats.atk / defendingPoke.stats.def;

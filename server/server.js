@@ -192,7 +192,7 @@ io.on("connection", (socket) => {
 
               return io.to(room).emit("death", {
                 username: enemyTeam.username,
-                pokemon: selectedPoke,
+                deadPoke: selectedPoke,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -292,7 +292,7 @@ io.on("connection", (socket) => {
               }
               return io.to(room).emit("death", {
                 username: enemyTeam.username,
-                pokemon: selectedPoke,
+                deadPoke: selectedPoke,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -324,7 +324,7 @@ io.on("connection", (socket) => {
               }
               return io.to(room).emit("death", {
                 username: enemyTeam.username,
-                pokemon: selectedPoke,
+                deadPoke: selectedPoke,
               });
             }
             enemyStats.hp -= damagecalc(myTeam, enemySelectedPoke); //TODO: Following the previous calculation

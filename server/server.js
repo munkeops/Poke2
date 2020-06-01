@@ -49,7 +49,7 @@ function damagecalc(attackObject, defendingPoke) {
   console.log("ATTACKING POKE: ", attackingPoke);
   let damage_2 = attackingPoke.stats.atk / defendingPoke.stats.def;
   damage = ((damage_1 * damage_2) / 50 + 2) * 1; // all calculations here are done in favor of "me" team due to it having higher speed
-  return damage;
+  return Math.round(damage);
 }
 
 io.on("connection", (socket) => {

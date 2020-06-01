@@ -41,16 +41,13 @@ app.get("/", (req, res) => {
 let activePlayers = {};
 let playerId = 0;
 
-function damagecalc(attackObject,defendingPoke){
-
-  let damage_1 = (((2*10)/5)+2) * attackObject.move.pow ;            //the calculation was split up in parts for better readability although it is the same as on the referenced website.
-  let attackingPoke = attackObject.team.find(pokemon=>pokemon.active===1);
-  let damage_2 = (attackingPoke.stats.atk/defendingPoke.stats.def);
-  damage = (((damage_1*damage_2)/50)+2) * 1;     // all calculations here are done in favor of "me" team due to it having higher speed
+function damagecalc(attackObject, defendingPoke) {
+  let damage_1 = ((2 * 10) / 5 + 2) * attackObject.move.pow; //the calculation was split up in parts for better readability although it is the same as on the referenced website.
+  let attackingPoke = attackObject.team.find((pokemon) => pokemon.active === 1);
+  let damage_2 = attackingPoke.stats.atk / defendingPoke.stats.def;
+  damage = ((damage_1 * damage_2) / 50 + 2) * 1; // all calculations here are done in favor of "me" team due to it having higher speed
   return damage;
 }
-
-
 
 io.on("connection", (socket) => {
   console.log("Connection accepted");
@@ -79,9 +76,6 @@ io.on("connection", (socket) => {
     //Now, after the entry for that user is confirmed in the record, you will reply to the user with his room ID, which he will store in his browser
     callback(parseInt((playerId - 1) / 2));
   });
-
-
-  
 
   //! When a player emits the 'play-turn' event, (in this case, typing a message and hitting send)
   //! he will send over his username and room ID. You will then find the relevant entry for that user in the dictionary and set the status to 'ready'
@@ -123,7 +117,6 @@ io.on("connection", (socket) => {
         let activeBitches = activePlayers[room][socket.id].team.filter(
           (pokemon) => pokemon.active === 1
         );
-        console.log("ACTIVE BITCHES:", activeBitches);
       }
 
       let entries = Object.values(activePlayers[room]);
@@ -187,7 +180,7 @@ io.on("connection", (socket) => {
           // ! In this case, myPlayer is the player whose move was registered second by the server
           if (myTeam.changing && !enemyTeam.changing) {
             //If 1 player is switching a pokemon
-            myStats.hp -= damagecalc(enemyTeam,selectedPoke); // TODO: Reduce the incoming Pokemons HP after calc
+            myStats.hp -= damagecalc(enemyTeam, selectedPoke); // TODO: Reduce the incoming Pokemons HP after calc
             console.log("MY TEAM CHANGE");
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
@@ -217,7 +210,7 @@ io.on("connection", (socket) => {
           }
 
           if (enemyTeam.changing && !myTeam.changing) {
-            enemyStats.hp -= damagecalc(myTeam,enemySelectedPoke); //TODO: Reduce the incoming Pokemon HP after calc
+            enemyStats.hp -= damagecalc(myTeam, enemySelectedPoke); //TODO: Reduce the incoming Pokemon HP after calc
 
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
@@ -267,7 +260,7 @@ io.on("connection", (socket) => {
           }
           if (myStats.spe >= enemyStats.spe) {
             //! If neither are changing pokemon
-            enemyStats.hp -= damagecalc(myTeam,enemySelectedPoke); //TODO If this players pokemon is faster, calc enemy hp.
+            enemyStats.hp -= damagecalc(myTeam, enemySelectedPoke); //TODO If this players pokemon is faster, calc enemy hp.
 
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
@@ -314,10 +307,8 @@ io.on("connection", (socket) => {
               enemyPoke: enemyTeam.team[enemyIndex],
               username,
             });
-
-            
-          } else if (myStats.spe <= enemyStats.spe){
-            myStats.hp -= damagecalc(enemyTeam,selectedPoke); //TODO Inverse of previous case. calculate hp reduction for "myStats" based on "enemyStats" first
+          } else if (myStats.spe <= enemyStats.spe) {
+            myStats.hp -= damagecalc(enemyTeam, selectedPoke); //TODO Inverse of previous case. calculate hp reduction for "myStats" based on "enemyStats" first
 
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
@@ -333,7 +324,7 @@ io.on("connection", (socket) => {
                 pokemon: selectedPoke,
               });
             }
-            enemyStats.hp -= damagecalc(myTeam,enemySelectedPoke); //TODO: Following the previous calculation
+            enemyStats.hp -= damagecalc(myTeam, enemySelectedPoke); //TODO: Following the previous calculation
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
               enemySelectedPoke.active = 0;
@@ -364,7 +355,7 @@ io.on("connection", (socket) => {
               username,
             });
           }
-          
+
           /*
           else if (myStats.spe === enemyStats.spe){
             
@@ -427,7 +418,6 @@ io.on("connection", (socket) => {
 
           }
           */
-
         }
       }
     }

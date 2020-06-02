@@ -63,9 +63,23 @@ class BattleBox extends React.Component {
     this.setState({ activePoke: selectedPoke, dead: false });
     socket.on(
       "first-turn",
-      ({ selectedPoke, enemySelectedPoke, username, myMove, enemyMove }) => {
+      ({
+        selectedPoke,
+        enemySelectedPoke,
+        username,
+        myMove,
+        enemyMove,
+        firstMove,
+      }) => {
         if (this.props.user.username === username) {
-          console.log("MY MOVE: ", myMove, "ENEMY MOVE: ", enemyMove);
+          console.log(
+            "MY MOVE: ",
+            myMove,
+            "ENEMY MOVE: ",
+            enemyMov,
+            "FIRST MOVER: ",
+            firstMove
+          );
           let myIndex = this.props.team.findIndex(
             (pokemon) => pokemon.name === selectedPoke.name
           );
@@ -80,7 +94,14 @@ class BattleBox extends React.Component {
             gameStart: false,
           });
         } else {
-          console.log("MY MOVE: ", enemyMove, "ENEMY MOVE: ", myMove);
+          console.log(
+            "MY MOVE: ",
+            enemyMove,
+            "ENEMY MOVE: ",
+            myMove,
+            "FIRST MOVER: ",
+            firstMove
+          );
           let myIndex = this.props.team.findIndex(
             (pokemon) => pokemon.name === enemySelectedPoke.name
           );
@@ -153,9 +174,16 @@ class BattleBox extends React.Component {
 
     socket.on(
       "next-turn",
-      ({ myPoke, enemyPoke, username, myMove, enemyMove }) => {
+      ({ myPoke, enemyPoke, username, myMove, enemyMove, firstMove }) => {
         if (this.props.user.username === username) {
-          console.log("MY MOVE: ", myMove, "ENEMY MOVE: ", enemyMove);
+          console.log(
+            "MY MOVE: ",
+            myMove,
+            "ENEMY MOVE: ",
+            enemyMove,
+            "FIRST MOVER: ",
+            firstMove
+          );
           let myIndex = this.props.team.findIndex(
             (pokemon) => pokemon.name === myPoke.name
           );
@@ -169,7 +197,14 @@ class BattleBox extends React.Component {
             disabled: false,
           });
         }
-        console.log("MY MOVE: ", enemyMove, "ENEMY MOVE: ", myMove);
+        console.log(
+          "MY MOVE: ",
+          enemyMove,
+          "ENEMY MOVE: ",
+          myMove,
+          "FIRST MOVER: ",
+          firstMove
+        );
         let myIndex = this.props.team.findIndex(
           (pokemon) => pokemon.name === enemyPoke.name
         );
@@ -185,22 +220,39 @@ class BattleBox extends React.Component {
       }
     );
 
-    socket.on("death", ({ username, deadPoke, myMove, enemyMove }) => {
-      if (this.props.user.username !== username) {
-        console.log("MY MOVE: ", enemyMove, "ENEMY MOVE: ", myMove);
-        let updatedTeam = this.props.team;
-        let dead = updatedTeam.find(
-          (pokemon) => pokemon.name === deadPoke.name
-        );
-        dead.dead = true;
-        dead.active = 0;
+    socket.on(
+      "death",
+      ({ username, deadPoke, myMove, enemyMove, firstMove }) => {
+        if (this.props.user.username !== username) {
+          console.log(
+            "MY MOVE: ",
+            enemyMove,
+            "ENEMY MOVE: ",
+            myMove,
+            "FIRST MOVER: ",
+            firstMove
+          );
+          let updatedTeam = this.props.team;
+          let dead = updatedTeam.find(
+            (pokemon) => pokemon.name === deadPoke.name
+          );
+          dead.dead = true;
+          dead.active = 0;
 
-        this.setState({ disabled: false, activePoke: null, dead: true });
-      } else {
-        console.log("MY MOVE: ", myMove, "ENEMY MOVE: ", enemyMove);
-        this.setState({ enemySelected: null });
+          this.setState({ disabled: false, activePoke: null, dead: true });
+        } else {
+          console.log(
+            "MY MOVE: ",
+            myMove,
+            "ENEMY MOVE: ",
+            enemyMove,
+            "FIRST MOVER: ",
+            firstMove
+          );
+          this.setState({ enemySelected: null });
+        }
       }
-    });
+    );
 
     socket.on("win", ({ username, myMove, enemyMove }) => {
       this.setState({ redirect: true });

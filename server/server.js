@@ -193,7 +193,7 @@ io.on("connection", (socket) => {
           if (myTeam.changing && !enemyTeam.changing) {
             //If 1 player is switching a pokemon
             myStats.hp -= damagecalc(enemyTeam, selectedPoke); // TODO: Reduce the incoming Pokemons HP after calc
-
+            let firstMove = enemySelectedPoke;
             console.log("MY TEAM CHANGE");
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
@@ -205,6 +205,7 @@ io.on("connection", (socket) => {
                 deadPoke: selectedPoke,
                 myMove,
                 enemyMove,
+                firstMove,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -224,12 +225,13 @@ io.on("connection", (socket) => {
               username,
               myMove,
               enemyMove,
+              firstMove,
             });
           }
 
           if (enemyTeam.changing && !myTeam.changing) {
             enemyStats.hp -= damagecalc(myTeam, enemySelectedPoke); //TODO: Reduce the incoming Pokemon HP after calc
-
+            let firstMove = selectedPoke;
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
               enemySelectedPoke.active = 0;
@@ -240,6 +242,7 @@ io.on("connection", (socket) => {
                 deadPoke: enemySelectedPoke,
                 myMove,
                 enemyMove,
+                firstMove,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -260,6 +263,7 @@ io.on("connection", (socket) => {
               username,
               myMove,
               enemyMove,
+              firstMove,
             });
           }
 
@@ -280,12 +284,13 @@ io.on("connection", (socket) => {
               username,
               myMove,
               enemyMove,
+              firstMove: null,
             });
           }
           if (myStats.spe >= enemyStats.spe) {
             //! If neither are changing pokemon
             enemyStats.hp -= damagecalc(myTeam, enemySelectedPoke); //TODO If this players pokemon is faster, calc enemy hp.
-
+            let firstMove = selectedPoke;
             if (enemyStats.hp <= 0) {
               activePlayers[room][enemyTeam.id].status = "pending";
               enemySelectedPoke.active = 0;
@@ -302,6 +307,7 @@ io.on("connection", (socket) => {
                 deadPoke: enemySelectedPoke,
                 myMove,
                 enemyMove,
+                firstMove,
               });
             }
             myStats.hp -= damagecalc(enemyTeam, selectedPoke); //TODO If after taking above damage, the "enemy" pokemon doesn't die,
@@ -322,6 +328,7 @@ io.on("connection", (socket) => {
                 deadPoke: selectedPoke,
                 myMove,
                 enemyMove,
+                firstMove,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -340,6 +347,7 @@ io.on("connection", (socket) => {
               username,
               myMove,
               enemyMove,
+              firstMove,
             });
           } else if (myStats.spe <= enemyStats.spe) {
             myStats.hp -= damagecalc(enemyTeam, selectedPoke); //TODO Inverse of previous case. calculate hp reduction for "myStats" based on "enemyStats" first
@@ -360,6 +368,7 @@ io.on("connection", (socket) => {
                 deadPoke: selectedPoke,
                 myMove,
                 enemyMove,
+                firstMove,
               });
             }
             enemyStats.hp -= damagecalc(myTeam, enemySelectedPoke); //TODO: Following the previous calculation
@@ -379,6 +388,7 @@ io.on("connection", (socket) => {
                 deadPoke: enemySelectedPoke,
                 myMove,
                 enemyMove,
+                firstMove,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -397,6 +407,7 @@ io.on("connection", (socket) => {
               username,
               myMove,
               enemyMove,
+              firstMove,
             });
           }
 

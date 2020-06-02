@@ -147,4 +147,14 @@
 
 .anim {
   position: absolute;
+  bottom: 500px;
+  right: 600px;
+}
+
+.anim-2 {
+  position: absolute;
+  img {
+    width: 100px;
+    height: auto;
+  }
 }

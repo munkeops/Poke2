@@ -91,10 +91,10 @@ class BattleBox extends React.Component {
           );
           let myAnim, foeAnim;
           if (myMove) {
-            myAnim = myMove.type;
+            myAnim = myMove.moveType;
           }
           if (enemyMove) {
-            foeAnim = enemyMove.type;
+            foeAnim = enemyMove.moveType;
           }
 
           console.log("MY TYPE: ", myAnim);
@@ -106,16 +106,28 @@ class BattleBox extends React.Component {
           let prevTeam = this.props.team;
           prevTeam[myIndex] = selectedPoke;
           this.props.updateTeam(prevTeam);
-          this.setState({
-            activePoke: selectedPoke,
-            enemySelected: enemySelectedPoke,
-            disabled: false,
-            gameStart: false,
-            anim: {
-              friend: myAnim,
-              foe: foeAnim,
+          this.setState(
+            {
+              activePoke: selectedPoke,
+              enemySelected: enemySelectedPoke,
+              disabled: false,
+              gameStart: false,
+              anim: {
+                friend: myAnim,
+                foe: foeAnim,
+              },
             },
-          });
+            () => {
+              setTimeout(() => {
+                this.setState({
+                  anim: {
+                    friend: "",
+                    foe: "",
+                  },
+                });
+              }, 2000);
+            }
+          );
         } else {
           console.log(
             "MY MOVE: ",
@@ -125,6 +137,13 @@ class BattleBox extends React.Component {
             "FIRST MOVER: ",
             firstMove
           );
+          let myAnim, foeAnim;
+          if (myMove) {
+            myAnim = myMove.moveType;
+          }
+          if (enemyMove) {
+            foeAnim = enemyMove.moveType;
+          }
           let myIndex = this.props.team.findIndex(
             (pokemon) => pokemon.name === enemySelectedPoke.name
           );
@@ -132,12 +151,28 @@ class BattleBox extends React.Component {
           let prevTeam = this.props.team;
           prevTeam[myIndex] = enemySelectedPoke;
           this.props.updateTeam(prevTeam);
-          this.setState({
-            enemySelected: selectedPoke,
-            activePoke: enemySelectedPoke,
-            disabled: false,
-            gameStart: false,
-          });
+          this.setState(
+            {
+              enemySelected: selectedPoke,
+              activePoke: enemySelectedPoke,
+              disabled: false,
+              gameStart: false,
+              anim: {
+                friend: myAnim,
+                foe: foeAnim,
+              },
+            },
+            () => {
+              setTimeout(() => {
+                this.setState({
+                  anim: {
+                    friend: "",
+                    foe: "",
+                  },
+                });
+              }, 1000);
+            }
+          );
         }
       }
     );
@@ -207,6 +242,13 @@ class BattleBox extends React.Component {
             "FIRST MOVER: ",
             firstMove
           );
+          let myAnim, foeAnim;
+          if (myMove) {
+            myAnim = myMove.moveType;
+          }
+          if (enemyMove) {
+            foeAnim = enemyMove.moveType;
+          }
           let myIndex = this.props.team.findIndex(
             (pokemon) => pokemon.name === myPoke.name
           );
@@ -214,11 +256,27 @@ class BattleBox extends React.Component {
           let prevTeam = this.props.team;
           prevTeam[myIndex] = myPoke;
           this.props.updateTeam(prevTeam);
-          return this.setState({
-            activePoke: myPoke,
-            enemySelected: enemyPoke,
-            disabled: false,
-          });
+          return this.setState(
+            {
+              activePoke: myPoke,
+              enemySelected: enemyPoke,
+              disabled: false,
+              anim: {
+                friend: myAnim,
+                foe: foeAnim,
+              },
+            },
+            () => {
+              setTimeout(() => {
+                this.setState({
+                  anim: {
+                    friend: "",
+                    foe: "",
+                  },
+                });
+              }, 2000);
+            }
+          );
         }
         console.log(
           "MY MOVE: ",
@@ -228,6 +286,13 @@ class BattleBox extends React.Component {
           "FIRST MOVER: ",
           firstMove
         );
+        let myAnim, foeAnim;
+        if (myMove) {
+          myAnim = myMove.moveType;
+        }
+        if (enemyMove) {
+          foeAnim = enemyMove.moveType;
+        }
         let myIndex = this.props.team.findIndex(
           (pokemon) => pokemon.name === enemyPoke.name
         );
@@ -235,11 +300,27 @@ class BattleBox extends React.Component {
         let prevTeam = this.props.team;
         prevTeam[myIndex] = enemyPoke;
         this.props.updateTeam(prevTeam);
-        return this.setState({
-          activePoke: enemyPoke,
-          enemySelected: myPoke,
-          disabled: false,
-        });
+        return this.setState(
+          {
+            activePoke: enemyPoke,
+            enemySelected: myPoke,
+            disabled: false,
+            anim: {
+              friend: myAnim,
+              foe: foeAnim,
+            },
+          },
+          () => {
+            setTimeout(() => {
+              this.setState({
+                anim: {
+                  friend: "",
+                  foe: "",
+                },
+              });
+            }, 2000);
+          }
+        );
       }
     );
 
@@ -448,6 +529,11 @@ class BattleBox extends React.Component {
                         src={`http://www.pkparaiso.com/imagenes/xy/sprites/animados-espalda/${this.state.activePoke.name}.gif`}
                         alt={this.state.activePoke.name}
                       ></img>
+                      {this.state.anim.friend ? (
+                        <div className="anim-2">
+                          <img src={fireAnim}></img>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 ) : null}

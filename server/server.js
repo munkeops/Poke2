@@ -351,7 +351,7 @@ io.on("connection", (socket) => {
             });
           } else if (myStats.spe <= enemyStats.spe) {
             myStats.hp -= damagecalc(enemyTeam, selectedPoke); //TODO Inverse of previous case. calculate hp reduction for "myStats" based on "enemyStats" first
-
+            let firstMove = enemySelectedPoke;
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
               selectedPoke.active = 0;

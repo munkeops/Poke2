@@ -17,6 +17,7 @@
   padding-top: 100px;
   padding-bottom: 30px;
   padding-left: 50px;
+  position: relative;
 }
 
 .enemy {
@@ -142,4 +143,8 @@
   height: 6px;
   margin-left: 0;
   margin-top: 8px;
+}
+
+.anim {
+  position: absolute;
 }

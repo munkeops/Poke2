@@ -6,6 +6,11 @@ import { updateTeam } from "../../actions/authActions";
 import { Redirect } from "react-router";
 import { withRouter } from "react-router-dom";
 
+import waterAnim from "../../assets/moves/water.gif";
+import fireAnim from "../../assets/moves/fire.gif";
+import grassAnim from "../../assets/moves/grass.gif";
+import elecAnim from "../../assets/moves/elec.gif";
+
 class BattleBox extends React.Component {
   constructor(props) {
     super(props);
@@ -18,6 +23,10 @@ class BattleBox extends React.Component {
       gameStart: true,
       gameEnd: false,
       redirect: false,
+      anim: {
+        friend: "",
+        foe: "",
+      },
     };
   }
   componentWillMount() {
@@ -80,6 +89,16 @@ class BattleBox extends React.Component {
             "FIRST MOVER: ",
             firstMove
           );
+          let myAnim, foeAnim;
+          if (myMove) {
+            myAnim = myMove.type;
+          }
+          if (enemyMove) {
+            foeAnim = enemyMove.type;
+          }
+
+          console.log("MY TYPE: ", myAnim);
+          console.log("ENEMY TYPE: ", foeAnim);
           let myIndex = this.props.team.findIndex(
             (pokemon) => pokemon.name === selectedPoke.name
           );
@@ -92,6 +111,10 @@ class BattleBox extends React.Component {
             enemySelected: enemySelectedPoke,
             disabled: false,
             gameStart: false,
+            anim: {
+              friend: myAnim,
+              foe: foeAnim,
+            },
           });
         } else {
           console.log(
@@ -375,6 +398,11 @@ class BattleBox extends React.Component {
                         src={`http://www.pkparaiso.com/imagenes/xy/sprites/animados/${this.state.enemySelected.name}.gif`}
                         alt={this.state.enemySelected.name}
                       ></img>
+                      {this.state.anim.foe ? (
+                        <div className="anim">
+                          <img src={elecAnim}></img>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 ) : null}
@@ -504,11 +532,14 @@ class BattleBox extends React.Component {
                       <div>{move.name}</div>
 
                       <div style={{ display: "flex" }}>
-                        <div
-                          style={{ padding: "5px", border: "1px solid black" }}
-                        >
-                          {move.type}
-                        </div>
+                        {move.type === "physical" ? (
+                          <div className="phys-block"></div>
+                        ) : move.type === "special" ? (
+                          <div className="spec-block"></div>
+                        ) : (
+                          <div className="norm-block"></div>
+                        )}
+
                         <div style={{ margin: "auto" }}>pow: {move.power}</div>
                         <div style={{ margin: "auto" }}>
                           acc: {move.accuracy}%

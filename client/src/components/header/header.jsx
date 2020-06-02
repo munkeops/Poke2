@@ -80,8 +80,10 @@ class Header extends React.Component {
           display: "flex",
           flexDirection: "column",
           paddingBottom: "1rem",
-          marginBottom: "2rem",
+
           position: "relative",
+          margin: "1rem 8rem",
+          marginBottom: "2rem",
         }}
       >
         <div className="header">

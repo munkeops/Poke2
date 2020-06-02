@@ -76,7 +76,7 @@ class BattleBox extends React.Component {
             "MY MOVE: ",
             myMove,
             "ENEMY MOVE: ",
-            enemyMov,
+            enemyMove,
             "FIRST MOVER: ",
             firstMove
           );

@@ -175,8 +175,17 @@ io.on("connection", (socket) => {
           let enemySelectedPoke = enemyTeam.team.find(
             (pokemon) => pokemon.active === 1
           );
+          let myMove, enemyMove;
+          if (myTeam.move) {
+            myMove = myTeam.move;
+          }
+          if (enemyTeam.move) {
+            enemyMove = enemyTeam.move;
+          }
           console.log("MY SELECTION: ", selectedPoke.name);
           console.log("ENEMY SELECTION: ", enemySelectedPoke.name);
+          console.log("MY MOVE: ", myMove);
+          console.log("ENEMY MOVE: ", enemyMove);
           //////// ! Damage calculation (DUMMY)
           let myStats = selectedPoke.stats;
           let enemyStats = enemySelectedPoke.stats;
@@ -184,6 +193,7 @@ io.on("connection", (socket) => {
           if (myTeam.changing && !enemyTeam.changing) {
             //If 1 player is switching a pokemon
             myStats.hp -= damagecalc(enemyTeam, selectedPoke); // TODO: Reduce the incoming Pokemons HP after calc
+
             console.log("MY TEAM CHANGE");
             if (myStats.hp <= 0) {
               activePlayers[room][socket.id].status = "pending";
@@ -193,6 +203,8 @@ io.on("connection", (socket) => {
               return io.to(room).emit("death", {
                 username: enemyTeam.username,
                 deadPoke: selectedPoke,
+                myMove,
+                enemyMove,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -205,10 +217,13 @@ io.on("connection", (socket) => {
             );
             myTeam.team[myIndex].stats = myStats;
             enemyTeam.team[enemyIndex].stats = enemyStats;
+
             return io.to(room).emit("first-turn", {
               selectedPoke: myTeam.team[myIndex],
               enemySelectedPoke: enemyTeam.team[enemyIndex],
               username,
+              myMove,
+              enemyMove,
             });
           }
 
@@ -223,6 +238,8 @@ io.on("connection", (socket) => {
               return io.to(room).emit("death", {
                 username: myTeam.username,
                 deadPoke: enemySelectedPoke,
+                myMove,
+                enemyMove,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -241,6 +258,8 @@ io.on("connection", (socket) => {
               selectedPoke: myTeam.team[myIndex],
               enemySelectedPoke: enemyTeam.team[enemyIndex],
               username,
+              myMove,
+              enemyMove,
             });
           }
 
@@ -259,6 +278,8 @@ io.on("connection", (socket) => {
               myPoke: myTeam.team[myIndex],
               enemyPoke: enemyTeam.team[enemyIndex],
               username,
+              myMove,
+              enemyMove,
             });
           }
           if (myStats.spe >= enemyStats.spe) {
@@ -272,11 +293,15 @@ io.on("connection", (socket) => {
               if (myTeam.killCount === 6) {
                 return io.to(room).emit("win", {
                   username: myTeam.username,
+                  myMove,
+                  enemyMove,
                 });
               }
               return io.to(room).emit("death", {
                 username: myTeam.username,
                 deadPoke: enemySelectedPoke,
+                myMove,
+                enemyMove,
               });
             }
             myStats.hp -= damagecalc(enemyTeam, selectedPoke); //TODO If after taking above damage, the "enemy" pokemon doesn't die,
@@ -288,11 +313,15 @@ io.on("connection", (socket) => {
               if (enemyTeam.killCount === 6) {
                 return io.to(room).emit("win", {
                   username: enemyTeam.username,
+                  myMove,
+                  enemyMove,
                 });
               }
               return io.to(room).emit("death", {
                 username: enemyTeam.username,
                 deadPoke: selectedPoke,
+                myMove,
+                enemyMove,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -309,6 +338,8 @@ io.on("connection", (socket) => {
               myPoke: myTeam.team[myIndex],
               enemyPoke: enemyTeam.team[enemyIndex],
               username,
+              myMove,
+              enemyMove,
             });
           } else if (myStats.spe <= enemyStats.spe) {
             myStats.hp -= damagecalc(enemyTeam, selectedPoke); //TODO Inverse of previous case. calculate hp reduction for "myStats" based on "enemyStats" first
@@ -320,11 +351,15 @@ io.on("connection", (socket) => {
               if (enemyTeam.killCount === 6) {
                 return io.to(room).emit("win", {
                   username: enemyTeam.username,
+                  myMove,
+                  enemyMove,
                 });
               }
               return io.to(room).emit("death", {
                 username: enemyTeam.username,
                 deadPoke: selectedPoke,
+                myMove,
+                enemyMove,
               });
             }
             enemyStats.hp -= damagecalc(myTeam, enemySelectedPoke); //TODO: Following the previous calculation
@@ -335,11 +370,15 @@ io.on("connection", (socket) => {
               if (myTeam.killCount === 6) {
                 return io.to(room).emit("win", {
                   username: myTeam.username,
+                  myMove,
+                  enemyMove,
                 });
               }
               return io.to(room).emit("death", {
                 username: myTeam.username,
                 deadPoke: enemySelectedPoke,
+                myMove,
+                enemyMove,
               });
             }
             activePlayers[room][socket.id].status = "pending";
@@ -356,6 +395,8 @@ io.on("connection", (socket) => {
               myPoke: myTeam.team[myIndex],
               enemyPoke: enemyTeam.team[enemyIndex],
               username,
+              myMove,
+              enemyMove,
             });
           }
 

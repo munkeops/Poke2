@@ -1,20 +1,24 @@
 .homepage-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
-  flex-wrap: wrap;
+  width: 70%;
+  margin: 2rem auto;
 }
 
 .play-half {
   display: flex;
   flex-direction: column;
+
+  min-width: 380px;
+  margin: auto;
 }
 
 .selection-half {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
-  max-height: 80vh;
+  max-height: 55vh;
 }
 
 .start-card {
@@ -57,8 +61,10 @@
 .selection-container {
   display: flex;
   flex-direction: column;
-  background-color: rgba(255, 255, 255, 0.8);
+
   border-radius: 5px;
+
+  font-size: 14px;
 }
 
 .poke-row {
@@ -81,19 +87,54 @@
 .creation-prev {
   display: flex;
   margin: 1rem;
-  flex-wrap: wrap;
+  width: 30%;
+  flex-direction: column;
+  max-height: 55vh;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    flex-wrap: wrap;
+    max-height: 90%;
+  }
 }
 
 .cp-poke {
-  margin: 5px;
+  margin: 5px auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: row !important;
+  flex-wrap: unset !important;
   text-align: center;
-  max-width: 100%;
-  flex-wrap: wrap;
-  border: 2px solid black;
+  max-width: 280px;
+  border: 2px solid darkgray;
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 16px;
   padding: 1rem;
+  font-size: 4px !important;
+  padding-right: 0;
+
+  div {
+    max-width: 50%;
+    flex-wrap: unset !important;
+
+    &:last-child {
+      margin-left: 15px;
+    }
+    img {
+      width: 56px;
+      height: 42px;
+      margin: auto;
+    }
+    input {
+      font-size: 11px;
+      max-width: 70%;
+      flex-wrap: unset !important;
+    }
+    button {
+      font-size: 11px;
+    }
+  }
 }
 
 .move-row {
@@ -156,10 +197,21 @@
 }
 
 .save-button {
-  margin: 1rem;
+  margin: 0.5rem auto;
   padding: 1rem;
   background-color: #00796b;
   color: white;
   font-weight: 700;
-  width: 90px;
+  width: 80%;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.poke-finder {
+  padding: 1rem 3rem;
+  max-width: 760px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  border: 2px solid darkslateblue;
 }

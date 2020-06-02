@@ -14,6 +14,7 @@ class Homepage extends React.Component {
     this.state = {
       reqMade: false,
       showTeams: false,
+
       teamList: [
         [
           {
@@ -557,6 +558,7 @@ class Homepage extends React.Component {
       selectionActivePoke: null,
       moveList: [],
       userMoves: {},
+      showSaveButton: false,
     };
   }
 
@@ -595,13 +597,14 @@ class Homepage extends React.Component {
       }),
       viewMoves: true,
       selectionActivePoke: name,
+      showSaveButton: true,
     });
     this.moveSelection();
   };
   renderCreation = (member) => {
     let pokemon = this.state.pokeData.find((item) => item.name === member.name);
     return (
-      <div className="cp-poke">
+      <div className="cp-poke" key={member.name}>
         <div
           style={{
             display: "flex",
@@ -610,7 +613,7 @@ class Homepage extends React.Component {
           }}
         >
           <img
-            src={`https://img.pokemondb.net/sprites/bank/normal/${pokemon.name}.png`}
+            src={`https://img.pokemondb.net/sprites/sword-shield/icon/${pokemon.name}.png`}
             alt={pokemon.name}
           ></img>
           <button
@@ -633,7 +636,14 @@ class Homepage extends React.Component {
         <div style={{ display: "flex", flexDirection: "column" }}>
           {this.state.userMoves[pokemon.name]
             ? this.state.userMoves[pokemon.name].map((move) => {
-                return <input type="text" readOnly value={move.name}></input>;
+                return (
+                  <input
+                    type="text"
+                    readOnly
+                    value={move.name}
+                    key={move.name}
+                  ></input>
+                );
               })
             : null}
         </div>
@@ -790,6 +800,49 @@ class Homepage extends React.Component {
     });
   };
 
+  moveBox = (type) => {
+    switch (type) {
+      case "water":
+        return ["#4fc3f7", "white"];
+      case "fire":
+        return ["#ef9a9a", "black"];
+      case "grass":
+        return ["#dce775", "black"];
+      case "normal":
+        return ["#e0e0e0", "black"];
+      case "fighting":
+        return ["#b71c1c", "white"];
+      case "flying":
+        return ["#9fa8da", "black"];
+      case "poison":
+        return ["#9c27b0", "white"];
+      case "electric":
+        return ["#ffeb3b", "black"];
+      case "ground":
+        return ["#5d4037", "white"];
+      case "psychic":
+        return ["#f50057", "white"];
+      case "rock":
+        return ["#bf360c", "white"];
+      case "ice":
+        return ["#80deea", "black"];
+      case "bug":
+        return ["#9e9d24", "black"];
+      case "dragon":
+        return ["#6a1b9a", "white"];
+      case "ghost":
+        return ["#4a148c", "white"];
+      case "dark":
+        return ["#263238", "white"];
+      case "steel":
+        return ["#424242", "white"];
+      case "fairy":
+        return ["#f8bbd0", "black"];
+      default:
+        return ["#cecece", "black"];
+    }
+  };
+
   render() {
     const idArray = [...Array(100).keys()].map((x) => x + 1);
     const sixRange = [...Array(6).keys()];
@@ -817,193 +870,234 @@ class Homepage extends React.Component {
               </div>
             )}
           </div>
+          <div
+            style={{
+              display: "flex",
 
-          <div className="selection-half">
-            <div className="selection-container">
-              <div className="cur-team"></div>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              justifyContent: "center",
+            }}
+          >
+            <div className="selection-half">
+              <div className="selection-container">
+                <div className="poke-finder">
+                  <div className="searchbox"></div>
+
+                  {this.state.viewMoves ? (
+                    <div style={{ padding: "5px 5rem" }}>
+                      <div
+                        className="move-row"
+                        style={{
+                          textAlign: "center",
+                          fontWeight: "600",
+                          borderBottom: "1px solid black",
+                          borderRadius: "none",
+                        }}
+                      >
+                        {" "}
+                        <div style={{ width: "20%" }}>Move</div>
+                        <div style={{ width: "30%" }}>Power</div>
+                        <div style={{ width: "15%%" }}>Class</div>
+                        <div style={{ width: "20%" }}>Type</div>
+                      </div>
+                      {this.state.moveList.map((move) => {
+                        return (
+                          <div
+                            className="move-row"
+                            key={move.name}
+                            onClick={() =>
+                              this.addMove({
+                                pokemon: this.state.selectionActivePoke,
+                                name: move.name,
+                                power: move.power,
+                                type: move.type,
+                                acc: move.accuracy,
+                                moveType: move.moveType,
+                              })
+                            }
+                          >
+                            <div style={{ width: "60%" }}>{move.name}</div>
+                            <div style={{ width: "30%" }}>
+                              {move.power || "N/A"}
+                            </div>
+
+                            {move.type === "physical" ? (
+                              <div className="phys-block"></div>
+                            ) : move.type === "special" ? (
+                              <div className="spec-block"></div>
+                            ) : (
+                              <div className="norm-block"></div>
+                            )}
+                            <div
+                              style={{
+                                width: "30%",
+                                backgroundColor: this.moveBox(move.moveType)[0],
+                                color: this.moveBox(move.moveType)[1],
+                                padding: "0.2rem 0.2rem",
+                                borderRadius: "5px",
+                                textAlign: "center",
+                                fontSize: "12px",
+                              }}
+                            >
+                              {move.moveType.toUpperCase()}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div>
+                      <div
+                        className="poke-row"
+                        style={{
+                          borderRadius: "0px",
+                          borderBottom: "1px solid grey",
+                        }}
+                      >
+                        <div
+                          className="single-stat"
+                          style={{ width: "170px", textAlign: "center" }}
+                        >
+                          Name
+                        </div>
+                        <div
+                          className="single-stat"
+                          style={{
+                            margin: "auto",
+                            marginRight: "20px",
+                          }}
+                        >
+                          Speed
+                        </div>
+                        <div
+                          className="single-stat"
+                          style={{
+                            margin: "auto",
+                            marginRight: "20px",
+                          }}
+                        >
+                          {" "}
+                          SpDef
+                        </div>
+                        <div
+                          className="single-stat"
+                          style={{
+                            margin: "auto",
+                            marginRight: "20px",
+                          }}
+                        >
+                          SpA
+                        </div>
+                        <div
+                          className="single-stat"
+                          style={{
+                            margin: "auto",
+                            marginRight: "20px",
+                          }}
+                        >
+                          Defense{" "}
+                        </div>
+                        <div
+                          className="single-stat"
+                          style={{
+                            margin: "auto",
+                            marginRight: "20px",
+                          }}
+                        >
+                          Attack
+                        </div>
+                        <div
+                          className="single-stat"
+                          style={{
+                            margin: "auto",
+                            marginRight: "20px",
+                          }}
+                        >
+                          HP
+                        </div>
+                      </div>
+                      {this.state.pokeData.length < 100 ? (
+                        <div>LOADING ... </div>
+                      ) : (
+                        idArray.map((arrayId) => {
+                          if (this.state.pokeData[arrayId]) {
+                            return (
+                              <div
+                                className="poke-row"
+                                key={this.state.pokeData[arrayId].id}
+                                onClick={() =>
+                                  this.updateTeam(
+                                    this.state.pokeData[arrayId].name
+                                  )
+                                }
+                              >
+                                <div
+                                  className="single-stat"
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    width: "170px",
+                                    justifyContent: "flex-start",
+                                  }}
+                                >
+                                  <img
+                                    src={`https://img.pokemondb.net/sprites/sword-shield/icon/${this.state.pokeData[arrayId].name}.png`}
+                                    alt={this.state.pokeData[arrayId].name}
+                                  ></img>
+                                  <div
+                                    style={{
+                                      margin: "auto",
+                                      marginLeft: "5px",
+                                      textTransform: "capitalize",
+                                    }}
+                                  >
+                                    {this.state.pokeData[arrayId].name}
+                                  </div>
+                                </div>
+                                {sixRange.map((index) => {
+                                  return (
+                                    <div
+                                      className="single-stat"
+                                      style={{
+                                        margin: "auto",
+                                        marginRight: "20px",
+                                      }}
+                                      key={
+                                        this.state.pokeData[arrayId].stats[
+                                          index
+                                        ].stat.name
+                                      }
+                                    >
+                                      {
+                                        this.state.pokeData[arrayId].stats[
+                                          index
+                                        ].base_stat
+                                      }
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          }
+                          return 1;
+                        })
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            {this.state.showSaveButton ? (
+              <div className="creation-prev">
                 <div className="save-button" onClick={this.saveTeam}>
                   SAVE TEAM
                 </div>
-              </div>
-              <div className="poke-finder">
-                <div className="searchbox"></div>
-                <div className="creation-prev">
+                <div>
                   {this.state.newTeam.map((member) =>
                     this.renderCreation(member)
                   )}
                 </div>
-                {this.state.viewMoves ? (
-                  this.state.moveList.map((move) => {
-                    return (
-                      <div
-                        className="move-row"
-                        key={move.name}
-                        onClick={() =>
-                          this.addMove({
-                            pokemon: this.state.selectionActivePoke,
-                            name: move.name,
-                            power: move.power,
-                            type: move.type,
-                            acc: move.accuracy,
-                            moveType: move.moveType,
-                          })
-                        }
-                      >
-                        <div style={{ width: "60%" }}>{move.name}</div>
-                        <div style={{ width: "30%" }}>
-                          {move.power || "N/A"}
-                        </div>
-
-                        {move.type === "physical" ? (
-                          <div className="phys-block"></div>
-                        ) : move.type === "special" ? (
-                          <div className="spec-block"></div>
-                        ) : (
-                          <div className="norm-block"></div>
-                        )}
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div>
-                    <div
-                      className="poke-row"
-                      style={{
-                        borderRadius: "0px",
-                        borderBottom: "1px solid grey",
-                      }}
-                    >
-                      <div
-                        className="single-stat"
-                        style={{ width: "170px", textAlign: "center" }}
-                      >
-                        Name
-                      </div>
-                      <div
-                        className="single-stat"
-                        style={{
-                          margin: "auto",
-                          marginRight: "20px",
-                        }}
-                      >
-                        Speed
-                      </div>
-                      <div
-                        className="single-stat"
-                        style={{
-                          margin: "auto",
-                          marginRight: "20px",
-                        }}
-                      >
-                        {" "}
-                        SpDef
-                      </div>
-                      <div
-                        className="single-stat"
-                        style={{
-                          margin: "auto",
-                          marginRight: "20px",
-                        }}
-                      >
-                        SpA
-                      </div>
-                      <div
-                        className="single-stat"
-                        style={{
-                          margin: "auto",
-                          marginRight: "20px",
-                        }}
-                      >
-                        Defense{" "}
-                      </div>
-                      <div
-                        className="single-stat"
-                        style={{
-                          margin: "auto",
-                          marginRight: "20px",
-                        }}
-                      >
-                        Attack
-                      </div>
-                      <div
-                        className="single-stat"
-                        style={{
-                          margin: "auto",
-                          marginRight: "20px",
-                        }}
-                      >
-                        HP
-                      </div>
-                    </div>
-                    {this.state.pokeData.length < 100 ? (
-                      <div>LOADING ... </div>
-                    ) : (
-                      idArray.map((arrayId) => {
-                        if (this.state.pokeData[arrayId]) {
-                          return (
-                            <div
-                              className="poke-row"
-                              key={this.state.pokeData[arrayId].id}
-                              onClick={() =>
-                                this.updateTeam(
-                                  this.state.pokeData[arrayId].name
-                                )
-                              }
-                            >
-                              <div
-                                className="single-stat"
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  width: "170px",
-                                  justifyContent: "flex-start",
-                                }}
-                              >
-                                <img
-                                  src={`https://img.pokemondb.net/sprites/sword-shield/icon/${this.state.pokeData[arrayId].name}.png`}
-                                  alt={this.state.pokeData[arrayId].name}
-                                ></img>
-                                <div
-                                  style={{
-                                    margin: "auto",
-                                    marginLeft: "5px",
-                                    textTransform: "capitalize",
-                                  }}
-                                >
-                                  {this.state.pokeData[arrayId].name}
-                                </div>
-                              </div>
-                              {sixRange.map((index) => {
-                                return (
-                                  <div
-                                    className="single-stat"
-                                    style={{
-                                      margin: "auto",
-                                      marginRight: "20px",
-                                    }}
-                                    key={
-                                      this.state.pokeData[arrayId].stats[index]
-                                        .stat.name
-                                    }
-                                  >
-                                    {
-                                      this.state.pokeData[arrayId].stats[index]
-                                        .base_stat
-                                    }
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        }
-                        return 1;
-                      })
-                    )}
-                  </div>
-                )}
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
       </Layout>

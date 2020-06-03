@@ -627,9 +627,7 @@ class BattleBox extends React.Component {
                         )}
 
                         <div style={{ margin: "auto" }}>pow: {move.power}</div>
-                        <div style={{ margin: "auto" }}>
-                          acc: {move.accuracy}%
-                        </div>
+                        <div style={{ margin: "auto" }}>acc: {move.acc}%</div>
                       </div>
                     </div>
                   );

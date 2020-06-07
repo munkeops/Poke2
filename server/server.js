@@ -450,7 +450,7 @@ io.on("connection", (socket) => {
       let entries = Object.values(activePlayers[foundRoom]);
       let enemyPlayer = entries.find((entry) => entry.id !== socket.id);
       console.log("FOUND ROOM, EMITTING WIN ON DC for ", enemyPlayer);
-      io.to(foundRoom).emit("win", {
+      io.to(enemyPlayer.room).emit("win", {
         username: enemyPlayer.username,
         myMove: "MOVE",
         enemyMove: "ENEMY MOVE",

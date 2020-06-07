@@ -34,6 +34,27 @@ mongoose.connect(
   }
 );
 
+app.get("/leaderboard",async (req,res)=>{
+  data=[]
+
+  await(User.find({},function(err,users){
+    if(err){
+      return res.json(err)
+    }
+    // console.log(users)
+    for(i=0;i<users.length;i++){
+      data.push({
+        "username":users[i]["username"],
+        "rating":users[i]["rank"]
+      })
+    
+    }
+   
+  }))
+  console.log(data.sort((a, b) => parseFloat(a.rating) - parseFloat(b.rating)).reverse())
+  res.json(data)
+});
+
 app.get("/", (req, res) => {
   res.json({ hi: "GAY" });
 });

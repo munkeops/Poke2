@@ -5,6 +5,7 @@ import "./header.styles.scss";
 import { GiPokecog } from "react-icons/gi";
 import { register, logout, login } from "../../actions/authActions";
 import { clearErrors } from "../../actions/errorActions";
+import { withRouter, Link } from "react-router-dom";
 
 class Header extends React.Component {
   constructor(props) {
@@ -73,7 +74,17 @@ class Header extends React.Component {
     }
   }
 
+  handleLogout = () => {
+    if (this.props.match.path !== "/") {
+      this.props.logout();
+      this.props.socket.disconnect();
+      return this.props.history.push("/");
+    }
+    return this.props.logout();
+  };
+
   render() {
+    console.log("HeADER PROPS: ", this.props);
     return (
       <div
         style={{
@@ -95,10 +106,13 @@ class Header extends React.Component {
           </div>
           <div className="right-half">
             <div>Profile</div>
+            <div className="header-link">
+              <Link to="/leaderboard">Leaderboard</Link>
+            </div>
             {this.props.isAuthenticated ? (
               <>
                 <div>{this.props.user.username}</div>
-                <div onClick={this.props.logout}>Logout</div>
+                <div onClick={this.handleLogout}>Logout</div>
               </>
             ) : (
               <div
@@ -141,10 +155,11 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   error: state.error,
   user: state.auth.user,
+  socket: state.auth.socket,
 });
 export default connect(mapStateToProps, {
   register,
   clearErrors,
   logout,
   login,
-})(Header);
+})(withRouter(Header));

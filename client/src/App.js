@@ -9,6 +9,7 @@ import Homepage from "./pages/homepage/homepage";
 import Battle from "./pages/battle/battle";
 
 import { loadUser } from "./actions/authActions";
+import Leaderboard from "./pages/leaderboard/leaderboard";
 
 class App extends React.Component {
   componentDidMount() {
@@ -22,6 +23,9 @@ class App extends React.Component {
             <Switch>
               <Route path="/battle">
                 <Battle />
+              </Route>
+              <Route path="/leaderboard">
+                <Leaderboard />
               </Route>
               <Route path="/">
                 <Homepage />

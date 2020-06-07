@@ -21,7 +21,7 @@ export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
   axios
     .get(
-      "https://poke2se-server.herokuapp.com//api/auth/user",
+      "https://poke2se-server.herokuapp.com/api/auth/user",
       tokenConfig(getState)
     )
     .then((res) => {

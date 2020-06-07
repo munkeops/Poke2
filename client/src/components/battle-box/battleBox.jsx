@@ -6,9 +6,8 @@ import { updateTeam } from "../../actions/authActions";
 import { Redirect } from "react-router";
 import { withRouter } from "react-router-dom";
 
-import waterAnim from "../../assets/moves/water.gif";
 import fireAnim from "../../assets/moves/fire.gif";
-import grassAnim from "../../assets/moves/grass.gif";
+
 import elecAnim from "../../assets/moves/elec.gif";
 
 class BattleBox extends React.Component {
@@ -481,7 +480,7 @@ class BattleBox extends React.Component {
                       ></img>
                       {this.state.anim.foe ? (
                         <div className="anim">
-                          <img src={elecAnim}></img>
+                          <img src={elecAnim} alt="anim"></img>
                         </div>
                       ) : null}
                     </div>
@@ -531,7 +530,7 @@ class BattleBox extends React.Component {
                       ></img>
                       {this.state.anim.friend ? (
                         <div className="anim-2">
-                          <img src={fireAnim}></img>
+                          <img src={fireAnim} alt="anim"></img>
                         </div>
                       ) : null}
                     </div>

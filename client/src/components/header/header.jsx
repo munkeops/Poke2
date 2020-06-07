@@ -76,7 +76,8 @@ class Header extends React.Component {
 
   render() {
     console.log("HeADER PROPS: ", this.props);
-    if (this.props.match.pathname === "/battle") {
+    if (this.props.match.path === "/battle") {
+      console.log("HII");
       return null;
     }
     return (

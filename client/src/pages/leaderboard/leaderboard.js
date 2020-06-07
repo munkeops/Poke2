@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { Layout } from "../layout";
+import "./leaderboard.styles.scss";
 
 const Leaderboard = () => {
   const [leaderBoard, setLeaderBoard] = useState(null);
@@ -13,6 +14,10 @@ const Leaderboard = () => {
   return (
     <Layout>
       <div className="leaderboard">
+        <div className="lb-row" style={{ borderBottom: "2px solid grey" }}>
+          <div className="lb-item">Name</div>
+          <div className="lb-item">Rating</div>
+        </div>
         {leaderBoard ? (
           leaderBoard.map((userObj) => (
             <div className="lb-row">

@@ -1,0 +1,18 @@
+.leaderboard {
+  margin: auto;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.lb-row {
+  display: flex;
+  font-weight: 600;
+}
+
+.lb-item {
+  margin: 1rem;
+  min-width: 300px;
+
+  &:last-child {
+    min-width: 100px;
+  }
+}

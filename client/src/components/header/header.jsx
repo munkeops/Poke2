@@ -93,12 +93,14 @@ class Header extends React.Component {
         }}
       >
         <div className="header">
-          <div className="brand">
-            <GiPokecog />
-            <span style={{ color: "white" }}>
-              Poke<span style={{ color: "#ff5252" }}>Two</span>
-            </span>
-          </div>
+          <Link to="/">
+            <div className="brand">
+              <GiPokecog />
+              <span style={{ color: "white" }}>
+                Poke<span style={{ color: "#ff5252" }}>Two</span>
+              </span>
+            </div>
+          </Link>
           <div className="right-half">
             <div>Profile</div>
             <div className="header-link">

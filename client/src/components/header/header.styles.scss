@@ -7,6 +7,11 @@
   padding: 1rem;
   padding-bottom: 0;
   margin-bottom: 0.4rem;
+
+  a {
+    text-decoration: none;
+    color: #ff5252;
+  }
 }
 
 .right-half {
@@ -49,7 +54,8 @@
 
 .brand {
   font-size: 2rem;
-  color: #ff5252;
+  color: #ff5252 !important;
+  text-decoration: none !important;
   span {
     font-size: 3rem;
   }

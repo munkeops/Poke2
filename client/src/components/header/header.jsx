@@ -74,17 +74,11 @@ class Header extends React.Component {
     }
   }
 
-  handleLogout = () => {
-    if (this.props.match.path !== "/") {
-      this.props.logout();
-      this.props.socket.disconnect();
-      return this.props.history.push("/");
-    }
-    return this.props.logout();
-  };
-
   render() {
     console.log("HeADER PROPS: ", this.props);
+    if (this.props.match.pathname === "/battle") {
+      return null;
+    }
     return (
       <div
         style={{
@@ -112,7 +106,7 @@ class Header extends React.Component {
             {this.props.isAuthenticated ? (
               <>
                 <div>{this.props.user.username}</div>
-                <div onClick={this.handleLogout}>Logout</div>
+                <div onClick={this.props.logout}>Logout</div>
               </>
             ) : (
               <div
@@ -155,7 +149,6 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   error: state.error,
   user: state.auth.user,
-  socket: state.auth.socket,
 });
 export default connect(mapStateToProps, {
   register,

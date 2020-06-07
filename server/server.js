@@ -452,6 +452,8 @@ io.on("connection", (socket) => {
       console.log("FOUND ROOM, EMITTING WIN ON DC for ", enemyPlayer);
       io.to(foundRoom).emit("win", {
         username: enemyPlayer.username,
+        myMove: "MOVE",
+        enemyMove: "ENEMY MOVE",
       });
       delete activePlayers[foundRoom];
     }

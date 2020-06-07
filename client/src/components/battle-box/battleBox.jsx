@@ -358,6 +358,7 @@ class BattleBox extends React.Component {
     );
 
     socket.on("win", ({ username, myMove, enemyMove }) => {
+      console.log("WINNING");
       this.setState({ redirect: true });
       if (this.props.user.username === username) {
         console.log("MY MOVE: ", myMove, "ENEMY MOVE: ", enemyMove);
